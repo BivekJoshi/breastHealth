@@ -1,26 +1,183 @@
 @import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@custom-variant dark (&:is(.dark *));
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+/* ─── Palette ──────────────────────────────────────────────────────
+   Soft pinks from the Advance Breast Clinic logo, with lilac and peach
+   as companion pastels. "heat" is a dreamy thermal-camera ramp and is
+   reserved for the thermal lens and heat illustrations. */
+@theme {
+  --color-paper: #fff7fa;
+  --color-blush: #ffeaf2;
+  --color-petal: #ffd3e2;
+  --color-rose: #cf2f6a;       /* actions — white text 4.9:1 */
+  --color-rose-deep: #ad1f56;  /* small text on pastel tints */
+  --color-berry: #4a1a33;      /* ink */
+  --color-mauve: #8a5a72;      /* secondary text, ≥4.8:1 on every tint */
+  --color-lilac: #f3edff;
+  --color-lavender: #cdbef7;
+  --color-lilac-deep: #6a4fc0;
+  --color-peach: #ffefe6;
+  --color-apricot: #ffc9ae;
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+  --color-heat-0: #3b2370;
+  --color-heat-1: #7b5bd6;
+  --color-heat-2: #e55ea2;
+  --color-heat-3: #ff9e7a;
+  --color-heat-4: #ffd98a;
+  --color-heat-5: #fff8e7;
+
+  --shadow-soft: 0 14px 36px -18px rgb(207 47 106 / 0.35), 0 2px 6px -2px rgb(74 26 51 / 0.06);
+  --shadow-lift: 0 22px 50px -20px rgb(207 47 106 / 0.45), 0 4px 10px -4px rgb(74 26 51 / 0.08);
+
+  --animate-float: float 7s ease-in-out infinite;
+  @keyframes float {
+    0%, 100% { transform: translateY(0) rotate(var(--tilt, 0deg)); }
+    50% { transform: translateY(-10px) rotate(calc(var(--tilt, 0deg) + 8deg)); }
+  }
+  --animate-twinkle: twinkle 3.2s ease-in-out infinite;
+  @keyframes twinkle {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.45; transform: scale(0.8); }
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@theme inline {
+  --font-sans: var(--font-nunito), var(--font-baloo), ui-rounded, system-ui, sans-serif;
+  --font-display: var(--font-fredoka), var(--font-baloo), ui-rounded, system-ui, sans-serif;
+  --font-heading: var(--font-fredoka), var(--font-baloo), ui-rounded, system-ui, sans-serif;
+  --font-script: var(--font-dancing), var(--font-baloo), cursive;
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+/* shadcn/ui semantic tokens, mapped onto the palette */
+:root {
+  --background: var(--color-paper);
+  --foreground: var(--color-berry);
+  --card: #ffffff;
+  --card-foreground: var(--color-berry);
+  --popover: #ffffff;
+  --popover-foreground: var(--color-berry);
+  --primary: var(--color-rose);
+  --primary-foreground: #ffffff;
+  --secondary: var(--color-blush);
+  --secondary-foreground: var(--color-berry);
+  --muted: var(--color-blush);
+  --muted-foreground: var(--color-mauve);
+  --accent: var(--color-blush);
+  --accent-foreground: var(--color-berry);
+  --destructive: #c4321f;
+  --border: #fbd9e5;
+  --input: #f6c6d7;
+  --ring: var(--color-rose);
+  --radius: 1rem;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  html {
+    @apply scroll-smooth bg-background font-sans text-foreground;
+  }
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+  ::selection {
+    @apply bg-petal text-berry;
+  }
+  :focus-visible {
+    outline: 2px solid var(--color-rose);
+    outline-offset: 3px;
+  }
+  .bg-rose :focus-visible,
+  .on-rose :focus-visible {
+    outline-color: #ffffff;
+  }
+}
+
+/* Devanagari needs more room above and below the line than Latin. */
+:is(h1, h2, h3, .font-display):lang(ne) {
+  line-height: 1.3;
+}
+
+/* ─── Thermal lens (home hero) ─────────────────────────────────────
+   use-thermal-lens.ts writes --x/--y (lens centre, relative to the
+   .thermal-lens root). The lens is sized to the viewfinder. */
+@property --lens-open {
+  syntax: "<number>";
+  inherits: true;
+  initial-value: 0;
+}
+
+@keyframes lens-open {
+  from { --lens-open: 0; }
+  to { --lens-open: 1; }
+}
+
+.thermal-lens {
+  container-type: inline-size;
+  --lens-size: clamp(56px, 17cqi, 104px);
+  --lens-r: calc(var(--lens-size) * var(--lens-open));
+}
+
+.thermal-lens[data-live] {
+  --lens-open: 1;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .thermal-lens[data-live] {
+    animation: lens-open 0.6s ease-out both;
+  }
+}
+
+/* The home hero photo: its hazy background fades into the page on every side. */
+.photo-fade {
+  --photo-fade:
+    linear-gradient(to bottom, transparent, #000 16%, #000 80%, transparent),
+    linear-gradient(to right, transparent, #000 14%, #000 86%, transparent);
+  -webkit-mask-image: var(--photo-fade);
+  mask-image: var(--photo-fade);
+  -webkit-mask-composite: source-in;
+  mask-composite: intersect;
+}
+
+/* The thermal layer is only visible through the lens. */
+.lens-window {
+  --lens-mask: radial-gradient(
+    circle var(--lens-r) at var(--x, 70%) var(--y, 50%),
+    #000 calc(100% - 1.5px),
+    transparent 100%
+  );
+  -webkit-mask-image: var(--lens-mask);
+  mask-image: var(--lens-mask);
 }

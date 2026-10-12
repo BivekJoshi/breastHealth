@@ -1,36 +1,67 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# BreastScan — AI thermal breast screening (frontend)
 
-## Getting Started
-
-First, run the development server:
+Frontend-only marketing site built with **Next.js 16 (App Router)**, **Tailwind CSS v4** and **shadcn/ui** (Radix).
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+npm run dev            # http://localhost:3000
+npm run build && npm start
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Design
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+- **Mood:** soft, feminine and clean. Rounded cards, pill buttons, pastel sections (blush, lilac, peach), wavy section edges, and a few drifting petals and sparkles.
+- **Signature:** the home hero pairs "Early detection brings peace of mind." with the photo in assets/HeroWomen.png and a thermal scan window over her chest (placed by `PHOTO_SCAN` in features/thermal-lens/scan-portrait.tsx). Point at the scan to read the temperature there; the scale card's marker follows. A sample "No abnormality detected" result links to how reports work. Nothing moves on its own.
+- **Type:** Fredoka (headings) · Nunito (body) · Baloo 2 (Nepali; rounded to match, and it shapes `lang="ne"` correctly) · Dancing Script (one accent word per block, e.g. *heat*, *body*, *for yourself*).
+- **Colour:** `paper`, `blush`, `petal`, `rose` (actions), `rose-deep`, `berry` (text), `mauve`, `lilac`, `lavender`, `peach`. The `heat-0…5` ramp is used only for heat.
+- **Bilingual:** every section has a Nepali tag. Warning signs and risk factors use the clinic's own Nepali wording.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Languages (English / नेपाली)
 
-## Learn More
+- Every page exists twice: `/en/...` and `/ne/...`, both prerendered. `proxy.ts` redirects any path without a locale: the visitor's saved choice (`NEXT_LOCALE` cookie, set by the switch) first, then the browser's `Accept-Language`, then English.
+- The **switch** in the header (and mobile menu) keeps the current page and any `?city=` filter.
+- All copy lives in `content/` as `{ en, ne }` pairs, so both languages of an item sit side by side. The current language is primary; the other one appears as the small secondary line (section tags, warning signs, city names).
+- Server components: `const { t, alt, num, href } = await getI18n()` (`@/i18n/server`, built on `next/root-params`). Client components: `useI18n()` (`@/i18n/client`).
+  - `t(x)` / `alt(x)` pick the current / other language, `num(n)` formats numbers (Devanagari digits in Nepali: ३० मिनेट, ३६.४°C), `href("/book")` adds the locale prefix.
+- Each page sets its title and description per language, with `hreflang` alternates to the other one.
+- Static hosting without the proxy: link to `/en` or `/ne` directly; `/` itself needs the proxy (or a host redirect).
 
-To learn more about Next.js, take a look at the following resources:
+## Structure
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```
+proxy.ts                  locale redirect
+i18n/                     config (locales, cookie), helpers, getI18n (server), useI18n (client), metadata
+app/
+  globals.css             palette tokens, shadcn mapping, thermal-lens CSS
+  [lang]/
+    layout.tsx            root layout: <html lang>, fonts, per-language metadata
+    not-found.tsx         localized 404 (unknown paths reach it via [...rest])
+    (site)/               route group sharing header + footer
+      page.tsx            home — only composes sections
+      screening/ locations/ book/
+content/                  all copy and data as { en, ne }, typed (edit here, not in components)
+  site.ts common.ts home.ts screening.ts awareness.ts faqs.ts locations.ts booking.ts types.ts
+features/                 interactive pieces with their own logic
+  thermal-lens/           hero lens: torso.ts (drawing + heat sources), heat.ts (temperature map), torso-figure.tsx,
+                          body-map.tsx (points + card), use-thermal-lens.ts (rAF loop, tour); gurans-bloom.tsx for /screening
+  locations/              directory.ts (pure filter/group helpers), finder UI, ?city= deep links
+  booking/                form, ?centre= pre-selection
+sections/                 page sections (server components)
+  home/ screening/
+components/
+  ui/                     shadcn primitives (button has extra `xl`, `inverse` variants)
+  brand/                  logo, flower geometry, doodles (sparkles, petals, wave edge, script word)
+  layout/ common/
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Each `*-from-url.tsx` wrapper reads search params inside `<Suspense>`. The fallback is the same component with default props, so the static HTML still contains the full centre list and the full form.
 
-## Deploy on Vercel
+## Before going live
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- Replace the **sample** phone numbers, email and the 13 centres in `content/site.ts` and `content/locations.ts`.
+- Have a native speaker proofread the Nepali copy.
+- The booking form only shows a confirmation; connect `onSubmit` in `features/booking/booking-form.tsx` to a backend.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Note on Nepali rendering
+
+Some fonts break Nepali shaping under `lang="ne"`: Eczar, for example, renders परामर्श as परामर्‌श. If you change fonts, check a word with a reph (परामर्श, स्पर्श) with `lang="ne"` set. Keep `lang="ne"` on Nepali text so screen readers use the right voice.
