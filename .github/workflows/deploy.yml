@@ -1,0 +1,95 @@
+name: Deploy to cPanel
+
+# Push to PRODUCTION → build the static site (out/) → upload it over FTPS into
+# breastscan.health's document root (/home/evolveph/breastscan.health).
+#
+# The cPanel account has no shell, so this uses FTP, not SSH. The FTP account
+# (deploy@breastscan.health) is jailed into the document root, so it cannot
+# touch evolvepharmanepal.com's public_html.
+#
+# Repo → Settings → Secrets and variables → Actions
+#   Secrets:   CPANEL_FTP_HOST      209.42.27.16
+#              CPANEL_FTP_USER      deploy@breastscan.health
+#              CPANEL_FTP_PASSWORD  the FTP account's password
+#   Variables (optional, defaults shown):
+#              CPANEL_FTP_PORT        21
+#              CPANEL_FTP_REMOTE_DIR  /   (the account lands in the document root)
+#              CPANEL_FTP_VERIFY_CERT no  (see below)
+#              NODE_VERSION           22
+#
+# Certificate verification is off by default: the server's FTP certificate is
+# for whgi.net / *.stableserver.net, which no hostname for this server matches.
+# The upload is still TLS-encrypted.
+
+on:
+  push:
+    branches: [PRODUCTION]
+  workflow_dispatch:
+
+# Never let two deploys overwrite each other mid-upload.
+concurrency:
+  group: deploy-production
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: Build and deploy
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ vars.NODE_VERSION || '22' }}
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Build static site
+        run: npm run build
+
+      # mirror --delete removes whatever the build did not produce, so a broken
+      # build must never reach the upload step and empty the live site.
+      - name: Check build output
+        run: |
+          for f in out/en/index.html out/ne/index.html out/404.html out/.htaccess; do
+            test -f "$f" || { echo "::error::$f is missing — refusing to deploy"; exit 1; }
+          done
+          test -d out/_next || { echo "::error::out/_next is missing — refusing to deploy"; exit 1; }
+
+      - name: Install lftp
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq lftp
+
+      # .well-known/ (SSL renewal), cgi-bin/ and .ftpquota (Pure-FTPd's usage
+      # counter) belong to cPanel: excluded paths are neither uploaded nor deleted.
+      - name: Upload out/ over FTPS
+        env:
+          HOST: ${{ secrets.CPANEL_FTP_HOST }}
+          FTP_USER: ${{ secrets.CPANEL_FTP_USER }}
+          LFTP_PASSWORD: ${{ secrets.CPANEL_FTP_PASSWORD }}
+          PORT: ${{ vars.CPANEL_FTP_PORT || '21' }}
+          REMOTE_DIR: ${{ vars.CPANEL_FTP_REMOTE_DIR || '/' }}
+          VERIFY_CERT: ${{ vars.CPANEL_FTP_VERIFY_CERT || 'no' }}
+        run: |
+          lftp --env-password -u "$FTP_USER" -p "$PORT" "$HOST" <<EOF
+          set ftp:ssl-force true
+          set ftp:ssl-protect-data true
+          set ssl:verify-certificate $VERIFY_CERT
+          set net:max-retries 2
+          set net:timeout 30
+          set cmd:fail-exit true
+          mirror --reverse --delete --verbose --parallel=4 \
+            --exclude '^\.well-known/' \
+            --exclude '^cgi-bin/' \
+            --exclude '^\.ftpquota$' \
+            out/ "$REMOTE_DIR"
+          bye
+          EOF

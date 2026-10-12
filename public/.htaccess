@@ -1,0 +1,25 @@
+# Apache config for the static export on cPanel. proxy.ts does not run in a
+# static export, so its locale redirect lives here instead.
+
+Options -Indexes
+DirectoryIndex index.html
+ErrorDocument 404 /404.html
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+
+  # Same scope as proxy.ts: any path outside /en, /ne and /_next with no file
+  # extension. $1 is the path, so /book becomes /<locale>/book; the query
+  # string (?city=, ?centre=) is kept.
+
+  # 1. The visitor's saved choice (NEXT_LOCALE cookie, set by the switch).
+  RewriteCond %{HTTP_COOKIE} (?:^|;\s*)NEXT_LOCALE=(en|ne)(?:;|$)
+  RewriteRule ^(?!(?:en|ne|_next)(?:/|$))([^.]*)$ /%1/$1 [R=302,L]
+
+  # 2. The browser's language, when Nepali comes first.
+  RewriteCond %{HTTP:Accept-Language} ^ne [NC]
+  RewriteRule ^(?!(?:en|ne|_next)(?:/|$))([^.]*)$ /ne/$1 [R=302,L]
+
+  # 3. English.
+  RewriteRule ^(?!(?:en|ne|_next)(?:/|$))([^.]*)$ /en/$1 [R=302,L]
+</IfModule>

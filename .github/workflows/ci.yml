@@ -1,0 +1,32 @@
+name: CI
+
+# Catches broken builds before they reach main (and therefore cPanel).
+
+on:
+  pull_request:
+    branches: [PRODUCTION, main]
+  push:
+    # PRODUCTION is excluded: deploy.yml already builds it.
+    branches-ignore: [PRODUCTION]
+
+jobs:
+  build:
+    name: Lint and build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ vars.NODE_VERSION || '22' }}
+          cache: npm
+
+      - run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Build static site
+        run: npm run build

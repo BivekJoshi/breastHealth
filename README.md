@@ -5,7 +5,16 @@ Frontend-only marketing site built with **Next.js 16 (App Router)**, **Tailwind 
 ```bash
 npm install
 npm run dev            # http://localhost:3000
-npm run build && npm start
+npm run build          # static site in out/
+npx serve out          # preview it
+```
+
+## Deploy
+
+Static export uploaded to cPanel over FTPS, like the Evolve frontend. Push to `PRODUCTION` → [deploy.yml](.github/workflows/deploy.yml) builds and mirrors `out/` into breastscan.health's document root; the secrets it needs are listed at the top of that file. Every other branch and PR only runs [ci.yml](.github/workflows/ci.yml) (lint + build).
+
+```bash
+git checkout PRODUCTION && git merge main && git push origin PRODUCTION
 ```
 
 ## Design
@@ -24,7 +33,7 @@ npm run build && npm start
 - Server components: `const { t, alt, num, href } = await getI18n()` (`@/i18n/server`, built on `next/root-params`). Client components: `useI18n()` (`@/i18n/client`).
   - `t(x)` / `alt(x)` pick the current / other language, `num(n)` formats numbers (Devanagari digits in Nepali: ३० मिनेट, ३६.४°C), `href("/book")` adds the locale prefix.
 - Each page sets its title and description per language, with `hreflang` alternates to the other one.
-- Static hosting without the proxy: link to `/en` or `/ne` directly; `/` itself needs the proxy (or a host redirect).
+- `proxy.ts` only runs under `next dev`; the static export ignores it. In production `public/.htaccess` does the same redirect in Apache.
 
 ## Structure
 
