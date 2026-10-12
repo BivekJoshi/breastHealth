@@ -1,5 +1,5 @@
-# Apache config for the static export on cPanel. proxy.ts does not run in a
-# static export, so its locale redirect lives here instead.
+# Apache config for the static export on cPanel. proxy.ts only runs under
+# `next dev`, so its locale redirect lives here for the static export.
 
 Options -Indexes
 DirectoryIndex index.html
