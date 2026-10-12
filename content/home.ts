@@ -36,12 +36,15 @@ export const hero = {
 }
 
 export const promisesCopy: SectionCopy = {
-  title: { en: "Safe, gentle and private.", ne: "सुरक्षित, कोमल र गोप्य।" },
+  title: {
+    en: { before: "Safe, ", accent: "gentle", after: " and private." },
+    ne: { before: "सुरक्षित, ", accent: "कोमल", after: " र गोप्य।" },
+  },
 }
 
 export const visitCopy: SectionCopy & {
   barLabel: Bilingual<(minutes: string) => string>
-  barShort: Bilingual<(minutes: string) => string>
+  unit: Bilingual
   range: Bilingual<(from: string, to: string) => string>
   total: Bilingual<(minutes: string) => string>
 } = {
@@ -51,18 +54,22 @@ export const visitCopy: SectionCopy & {
     ne: "भ्रमणको धेरैजसो समय शान्त आराममा बित्छ, जसले क्यामेरालाई सही नाप लिन मद्दत गर्छ। तस्बिर खिच्न भने केही मिनेट मात्र लाग्छ।",
   },
   barLabel: { en: (m) => `${m} min`, ne: (m) => `${m} मिनेट` },
-  barShort: { en: (m) => `${m}m`, ne: (m) => `${m}मि` },
+  unit: { en: "minutes", ne: "मिनेट" },
   range: { en: (a, b) => `${a}–${b} min`, ne: (a, b) => `${a}–${b} मिनेट` },
   total: { en: (m) => `${m} minutes in all`, ne: (m) => `जम्मा ${m} मिनेट` },
 }
 
-export const agesCopy: SectionCopy & { caption: Bilingual } = {
-  title: { en: "Screening that starts at 18.", ne: "१८ वर्षदेखि नै स्क्रिनिङ।" },
+export const agesCopy: SectionCopy & { caption: Bilingual; gap: Bilingual } = {
+  title: {
+    en: { before: "Screening that starts at ", accent: "18", after: "." },
+    ne: { before: "", accent: "१८ वर्षदेखि", after: " नै स्क्रिनिङ।" },
+  },
   lead: {
     en: "Mammography is usually offered from 40, and it is less reliable in dense breast tissue — which is common in younger women. Thermal screening is designed for any age and any breast density.",
     ne: "म्यामोग्राफी प्रायः ४० वर्षपछि मात्र गरिन्छ, र बाक्लो स्तन तन्तुमा यो कम भरपर्दो हुन्छ — जुन कम उमेरका महिलामा सामान्य हो। थर्मल स्क्रिनिङ जुनसुकै उमेर र स्तन घनत्वका लागि बनाइएको हो।",
   },
   caption: { en: "Age in years", ne: "उमेर (वर्षमा)" },
+  gap: { en: "Before 40", ne: "४० वर्षअघि" },
 }
 
 export const centresCopy: SectionCopy & {

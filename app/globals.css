@@ -165,9 +165,9 @@
 
 /* The home hero photo: its hazy background fades into the page on every side. */
 .photo-fade {
-  --photo-fade:
+  /* --photo-fade:
     linear-gradient(to bottom, transparent, #000 16%, #000 80%, transparent),
-    linear-gradient(to right, transparent, #000 14%, #000 86%, transparent);
+    linear-gradient(to right, transparent, #000 14%, #000 86%, transparent); */
   -webkit-mask-image: var(--photo-fade);
   mask-image: var(--photo-fade);
   -webkit-mask-composite: source-in;

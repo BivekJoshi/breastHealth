@@ -7,8 +7,14 @@ import { common } from "@/content/common"
 import { hero } from "@/content/home"
 import { paths } from "@/content/site"
 import { getI18n } from "@/i18n/server"
+import { cn } from "@/lib/utils"
 
-const featureIcons = { safe: ShieldCheck, visit: Clock, ages: UserRound, report: CalendarCheck }
+const featureLook = {
+  safe: { icon: ShieldCheck, tile: "bg-blush text-rose" },
+  visit: { icon: Clock, tile: "bg-lilac text-lilac-deep" },
+  ages: { icon: UserRound, tile: "bg-peach text-[#c4532a]" },
+  report: { icon: CalendarCheck, tile: "bg-emerald-50 text-emerald-600" },
+}
 
 /** The home hero: the promise on the left, a woman with a thermal scan on the right. */
 export async function Hero() {
@@ -56,15 +62,22 @@ export async function Hero() {
             </Button>
           </div>
 
-          <ul className="mt-12 grid max-w-xl grid-cols-2 gap-y-7 sm:grid-cols-4 sm:divide-x sm:divide-petal">
+          <ul className="mt-12 grid max-w-xl grid-cols-2 gap-x-4 gap-y-7 sm:grid-cols-4 sm:gap-x-0 sm:divide-x sm:divide-petal">
             {hero.features.map((f) => {
-              const Icon = featureIcons[f.id as keyof typeof featureIcons]
+              const { icon: Icon, tile } = featureLook[f.id as keyof typeof featureLook]
               return (
-                <li key={f.id} className="flex flex-col items-start gap-3 pr-4 sm:px-5 sm:first:pl-0">
-                  <span className="grid size-11 place-items-center rounded-full bg-blush text-rose">
-                    <Icon className="size-5" />
+                <li key={f.id} className="group flex flex-col items-start gap-3 sm:px-5 sm:first:pl-0">
+                  <span
+                    className={cn(
+                      "grid size-11 place-items-center rounded-2xl transition-transform duration-300 ease-soft group-hover:rotate-[-8deg]",
+                      tile
+                    )}
+                  >
+                    <Icon className="size-5" strokeWidth={2.2} />
                   </span>
-                  <span className="text-sm leading-snug font-semibold text-berry/80">{t(f.label)}</span>
+                  <span className="text-[0.8125rem] leading-snug font-bold text-balance text-berry [&:lang(ne)]:leading-normal">
+                    {t(f.label)}
+                  </span>
                 </li>
               )
             })}
