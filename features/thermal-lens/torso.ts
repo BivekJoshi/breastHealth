@@ -47,7 +47,7 @@ export const POINTS: Record<(typeof bodyMap)[number]["id"], { x: number; y: numb
 // Pretend skin temperatures in °C, built up from the drawing above: a healthy,
 // symmetric pattern, so both sides match.
 
-export const BODY_C = 31.6
+export const BODY_C = 31.2
 
 const NIPPLE_RIGHT = { x: VIEW.w - NIPPLE.x, y: NIPPLE.y }
 
@@ -58,25 +58,16 @@ export const HEAT_SPOTS = [
   { x: 78, y: 166, r: 22, c: 4.2 }, // armpits run warm
   { x: 322, y: 166, r: 22, c: 4.2 },
   ...[NIPPLE, NIPPLE_RIGHT].flatMap(({ x, y }) => [
-    { x, y: y - 2, r: 40, c: 3 }, // breast tissue
-    { x, y, r: 5, c: 1.4 }, // nipple
+    { x, y: y - 4, r: 40, c: 3.6 }, // breast tissue
+    { x, y, r: 6, c: 1 }, // nipple
   ]),
   { x: 36, y: 340, r: 64, c: -1.6 }, // arms run cool
   { x: 364, y: 340, r: 64, c: -1.6 },
 ]
 
-/** The fold under each breast holds warmth. */
+/** The fold under each breast holds a little warmth. */
 export const FOLDS = [BREAST, mirror(BREAST)]
-export const FOLD_C = 2.2
-
-/** Blood vessels show up as warm lines, alike on both sides. */
-const LEFT_VESSELS = [
-  "M 182 150 C 172 178, 156 200, 150 232",
-  "M 112 196 C 124 212, 132 226, 138 240",
-  "M 186 232 C 176 244, 164 250, 152 252",
-]
-export const VESSELS = [...LEFT_VESSELS, ...LEFT_VESSELS.map(mirror)]
-export const VESSEL_C = 1.4
+export const FOLD_C = 1.2
 
 /** The part of the thermal view the home hero's scan window shows: the chest. */
 export const SCAN = { x: 60, y: 160, w: 280, h: 170 }

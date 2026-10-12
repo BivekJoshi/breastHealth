@@ -5,8 +5,6 @@ import {
   FOLDS,
   HEAT_SPOTS,
   SILHOUETTE,
-  VESSEL_C,
-  VESSELS,
   VIEW,
 } from "./torso"
 
@@ -74,12 +72,8 @@ export function heatField(): HeatField {
   if (field) return field
 
   const body = rasterise(1.5, (ctx) => ctx.fill(new Path2D(SILHOUETTE)))
-  const vessels = rasterise(1.2, (ctx) => {
-    ctx.lineWidth = 3
-    for (const d of VESSELS) ctx.stroke(new Path2D(d))
-  })
-  const folds = rasterise(3, (ctx) => {
-    ctx.lineWidth = 9
+  const folds = rasterise(6, (ctx) => {
+    ctx.lineWidth = 16
     for (const d of FOLDS) ctx.stroke(new Path2D(d))
   })
 
@@ -91,7 +85,7 @@ export function heatField(): HeatField {
     for (let i = 0; i < FIELD.w; i++) {
       const x = (i + 0.5) / GRID
       const k = j * FIELD.w + i
-      let t = BODY_C + vessels[k] * VESSEL_C + folds[k] * FOLD_C
+      let t = BODY_C + folds[k] * FOLD_C
       for (const s of HEAT_SPOTS) t += s.c * Math.exp(-((x - s.x) ** 2 + (y - s.y) ** 2) / (2 * s.r ** 2))
       body[k] *= fade
       celsius[k] = AMBIENT_C + body[k] * (Math.min(t, CORE_C) - AMBIENT_C)

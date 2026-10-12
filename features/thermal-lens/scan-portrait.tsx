@@ -35,19 +35,15 @@ const THERMAL_BOX = {
 }
 
 /**
- * The home hero's picture: the photo, with a thermal scan window over her
- * chest, a temperature scale and a sample result. Pointing at the scan reads
- * the temperature there; nothing moves on its own.
+ * The home hero's picture: the photo, with a small thermal scan card over
+ * her chest and a sample result. Pointing at the scan reads the temperature
+ * there; nothing moves on its own.
  */
 export function ScanPortrait({ className }: { className?: string }) {
-  const { t, num, href } = useI18n()
-  const ref = useRef<HTMLDivElement>(null)
-  const onReading = useCallback((celsius: number) => {
-    ref.current?.style.setProperty("--heat", heatLevel(celsius).toFixed(3))
-  }, [])
+  const { t, href } = useI18n()
 
   return (
-    <div ref={ref} className={cn("relative", className)}>
+    <div className={cn("relative", className)}>
       <div className="relative" style={{ aspectRatio: `${heroWoman.width} / ${heroWoman.height}` }}>
         <Image
           src={heroWoman}
@@ -59,28 +55,11 @@ export function ScanPortrait({ className }: { className?: string }) {
           className="photo-fade object-cover"
         />
 
-        <ScanWindow onReading={onReading} />
-
-        {/* temperature scale; the marker shows the reading under the crosshair */}
-        <div
-          aria-hidden
-          className="absolute top-[76%] right-0 w-[7rem] rounded-2xl bg-white p-2.5 shadow-soft ring-1 ring-petal/60 sm:top-[74%] sm:right-auto sm:-left-[10%] sm:w-[10.5rem] sm:p-4"
-        >
-          <div className="relative h-2 rounded-full bg-linear-to-r from-heat-1 via-heat-2 to-heat-4">
-            <span
-              className="absolute top-1/2 size-3.5 -translate-1/2 rounded-full border-2 border-white bg-rose shadow"
-              style={{ left: "calc(var(--heat, 0.5) * 100%)" }}
-            />
-          </div>
-          <div className="mt-2.5 flex justify-between text-[0.7rem] font-semibold text-mauve tabular-nums">
-            <span>{num(AMBIENT_C)}°C</span>
-            <span>{num(CORE_C)}°C</span>
-          </div>
-        </div>
+        <ScanCard />
 
         <p
           aria-hidden
-          className="absolute -right-[4%] bottom-[1%] hidden -rotate-12 items-end gap-1 font-script text-3xl leading-none text-rose sm:flex xl:-right-[8%] [&:lang(ne)]:text-lg"
+          className="absolute -right-[2%] -bottom-[11%] hidden -rotate-12 items-end gap-1 font-script text-[1.7rem] leading-none text-rose sm:flex xl:-right-[17%] xl:bottom-[5%] [&:lang(ne)]:text-lg"
         >
           {t(hero.note)}
           <Heart className="size-5 rotate-12 text-rose/70" />
@@ -88,7 +67,7 @@ export function ScanPortrait({ className }: { className?: string }) {
       </div>
 
       {/* a sample result: under the photo on phones, beside her face from sm */}
-      <div className="relative mx-auto -mt-4 w-full max-w-xs rounded-2xl bg-white p-4 shadow-lift ring-1 ring-petal/60 sm:absolute sm:top-[22%] sm:-right-[10%] sm:mt-0 sm:w-[12.5rem] xl:top-[20%] xl:-right-[16%] xl:w-[15rem]">
+      <div className="relative mx-auto mt-10 w-full max-w-xs rounded-2xl bg-white p-4 shadow-lift ring-1 ring-petal/60 sm:absolute sm:top-[22%] sm:-right-[10%] sm:mt-0 sm:w-[12.5rem] xl:top-[20%] xl:-right-[16%] xl:w-[15rem]">
         <p className="text-[0.65rem] font-extrabold tracking-wider text-mauve uppercase">
           {t(hero.result.eyebrow)}
         </p>
@@ -113,9 +92,13 @@ export function ScanPortrait({ className }: { className?: string }) {
   )
 }
 
-/** The window over the chest, showing the thermal view. Point at it to read the temperature. */
-function ScanWindow({ onReading }: { onReading: (celsius: number) => void }) {
-  const { locale } = useI18n()
+/**
+ * A small card over her chest: the thermal view, with its temperature scale
+ * underneath. Point at the view to read the temperature there; the scale's
+ * marker follows.
+ */
+function ScanCard() {
+  const { locale, num } = useI18n()
   const ref = useRef<HTMLDivElement>(null)
   const readout = useRef<HTMLSpanElement>(null)
   const format = useMemo(
@@ -123,7 +106,7 @@ function ScanWindow({ onReading }: { onReading: (celsius: number) => void }) {
     [locale]
   )
 
-  /** Moves the crosshair to (u, v), 0–1 across the window, and reads the temperature there. */
+  /** Moves the crosshair to (u, v), 0–1 across the view, and reads the temperature there. */
   const readAt = useCallback(
     (u: number, v: number) => {
       const el = ref.current
@@ -131,53 +114,61 @@ function ScanWindow({ onReading }: { onReading: (celsius: number) => void }) {
       const celsius = temperatureAt((SCAN.x + u * SCAN.w) / VIEW.w, (SCAN.y + v * SCAN.h) / VIEW.h)
       el.style.setProperty("--cx", `${u * 100}%`)
       el.style.setProperty("--cy", `${v * 100}%`)
+      el.style.setProperty("--heat", heatLevel(celsius).toFixed(3))
       if (readout.current) readout.current.textContent = `${format.format(celsius)}°C`
-      onReading(celsius)
     },
-    [format, onReading]
+    [format]
   )
 
   useEffect(() => readAt(0.5, 0.5), [readAt])
 
   const onPoint = (e: React.PointerEvent<HTMLDivElement>) => {
     const r = e.currentTarget.getBoundingClientRect()
-    e.currentTarget.dataset.reading = ""
+    ref.current?.setAttribute("data-reading", "")
     readAt(clamp01((e.clientX - r.left) / r.width), clamp01((e.clientY - r.top) / r.height))
   }
   const onLeave = (e: React.PointerEvent<HTMLDivElement>) => {
     // a tap keeps its reading on screen
     if (e.pointerType === "touch") return
-    delete e.currentTarget.dataset.reading
+    ref.current?.removeAttribute("data-reading")
     readAt(0.5, 0.5)
   }
 
   return (
-    <div
-      ref={ref}
-      aria-hidden
-      onPointerMove={onPoint}
-      onPointerDown={onPoint}
-      onPointerLeave={onLeave}
-      className="group/scan absolute cursor-crosshair"
-      style={SCAN_BOX}
-    >
-      <div className="absolute -inset-2 rounded-[1.5rem] border-2 border-white/90 shadow-[0_18px_40px_-18px_rgb(123_91_214/0.6)]" />
-      <div className="absolute inset-0 overflow-hidden rounded-2xl bg-heat-0">
+    <div ref={ref} aria-hidden className="group/scan absolute" style={SCAN_BOX}>
+      <div className="absolute -inset-1.5 -bottom-10 rounded-[1.375rem] bg-white shadow-lift ring-1 ring-petal/50" />
+
+      <div
+        onPointerMove={onPoint}
+        onPointerDown={onPoint}
+        onPointerLeave={onLeave}
+        className="absolute inset-0 cursor-crosshair overflow-hidden rounded-2xl bg-heat-0"
+      >
         <ThermalTorso className="absolute max-w-none" style={THERMAL_BOX} />
+        {["top-2 left-2 border-t-[1.5px] border-l-[1.5px]", "top-2 right-2 border-t-[1.5px] border-r-[1.5px]",
+          "bottom-2 left-2 border-b-[1.5px] border-l-[1.5px]", "right-2 bottom-2 border-r-[1.5px] border-b-[1.5px]"].map((c) => (
+          <span key={c} className={cn("absolute size-3 border-white/80", c)} />
+        ))}
       </div>
 
-      {(["top-2.5 left-2.5 border-t-2 border-l-2", "top-2.5 right-2.5 border-t-2 border-r-2",
-        "bottom-2.5 left-2.5 border-b-2 border-l-2", "right-2.5 bottom-2.5 border-r-2 border-b-2"] as const).map((c) => (
-        <span key={c} className={cn("absolute size-4 border-white/90", c)} />
-      ))}
-
-      <div className="absolute" style={{ left: "var(--cx, 50%)", top: "var(--cy, 50%)" }}>
-        <span className="absolute h-px w-4 -translate-1/2 bg-white" />
-        <span className="absolute h-4 w-px -translate-1/2 bg-white" />
+      <div className="pointer-events-none absolute" style={{ left: "var(--cx, 50%)", top: "var(--cy, 50%)" }}>
+        <span className="absolute h-px w-3.5 -translate-1/2 bg-white/90" />
+        <span className="absolute h-3.5 w-px -translate-1/2 bg-white/90" />
         <span
           ref={readout}
-          className="absolute -top-8 left-2 rounded-full bg-white px-2 py-0.5 text-xs font-extrabold whitespace-nowrap text-berry tabular-nums opacity-0 shadow-sm transition-opacity group-data-reading/scan:opacity-100"
+          className="absolute -top-7 left-1.5 rounded-full bg-white px-2 py-0.5 text-[0.7rem] font-extrabold whitespace-nowrap text-berry tabular-nums opacity-0 shadow-sm transition-opacity group-data-reading/scan:opacity-100"
         />
+      </div>
+
+      <div className="absolute inset-x-1 -bottom-7.5 flex items-center gap-2 text-[0.65rem] font-bold text-mauve tabular-nums">
+        <span>{num(AMBIENT_C)}°C</span>
+        <span className="relative h-1.5 flex-1 rounded-full bg-linear-to-r from-heat-1 via-heat-2 to-heat-4">
+          <span
+            className="absolute top-1/2 size-3 -translate-1/2 rounded-full border-2 border-white bg-rose shadow-sm"
+            style={{ left: "calc(var(--heat, 0.5) * 100%)" }}
+          />
+        </span>
+        <span>{num(CORE_C)}°C</span>
       </div>
     </div>
   )

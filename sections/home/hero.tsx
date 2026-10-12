@@ -1,22 +1,26 @@
 import Link from "next/link"
 import { ArrowRight, CalendarCheck, CalendarDays, Clock, ShieldCheck, Sparkles, UserRound } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { Script } from "@/components/brand/doodles"
 import { ScanPortrait } from "@/features/thermal-lens/scan-portrait"
 import { common } from "@/content/common"
 import { hero } from "@/content/home"
 import { paths } from "@/content/site"
 import { getI18n } from "@/i18n/server"
-import { cn } from "@/lib/utils"
 
 const featureIcons = { safe: ShieldCheck, visit: Clock, ages: UserRound, report: CalendarCheck }
 
 /** The home hero: the promise on the left, a woman with a thermal scan on the right. */
 export async function Hero() {
-  const { t, href, locale } = await getI18n()
+  const { t, href } = await getI18n()
   const title = t(hero.title)
 
   return (
-    <section aria-labelledby="hero" className="overflow-x-clip">
+    <section
+      aria-labelledby="hero"
+      // a soft pink halo behind the photo
+      className="overflow-x-clip bg-[radial-gradient(38%_55%_at_80%_48%,#ffe4ee,transparent_72%)]"
+    >
       <div className="mx-auto grid max-w-7xl items-center gap-16 px-6 pt-12 pb-16 sm:px-10 lg:min-h-[min(calc(100svh-6rem),820px)] lg:grid-cols-[minmax(0,1fr)_min(28rem,calc((100svh-12rem)*0.87))] lg:gap-12 lg:py-12 xl:grid-cols-[minmax(0,1fr)_min(30rem,calc((100svh-12rem)*0.87))]">
         <div>
           <span className="inline-flex items-center gap-2 rounded-full bg-blush px-4 py-2 text-[0.7rem] font-extrabold tracking-[0.08em] text-rose-deep uppercase sm:text-xs sm:tracking-[0.12em] [&:lang(ne)]:tracking-normal">
@@ -30,9 +34,7 @@ export async function Hero() {
           >
             <span className="block">{title.first}</span>
             {title.soft && <span className="text-mauve">{title.soft}</span>}
-            <span className={cn("text-rose", locale === "en" && "font-sans font-extrabold italic")}>
-              {title.accent}
-            </span>
+            <Script className="text-[1.15em] leading-[0.8]">{title.accent}</Script>
             {title.after}
           </h1>
 

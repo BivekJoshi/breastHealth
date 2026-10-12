@@ -15,7 +15,6 @@ const fredoka = Fredoka({
 const nunito = Nunito({
   variable: "--font-nunito",
   subsets: ["latin"],
-  style: ["normal", "italic"],
 })
 
 // Nepali. Neither Latin face has Devanagari, so Nepali text falls through

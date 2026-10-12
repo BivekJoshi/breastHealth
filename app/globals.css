@@ -32,6 +32,9 @@
   --shadow-soft: 0 14px 36px -18px rgb(207 47 106 / 0.35), 0 2px 6px -2px rgb(74 26 51 / 0.06);
   --shadow-lift: 0 22px 50px -20px rgb(207 47 106 / 0.45), 0 4px 10px -4px rgb(74 26 51 / 0.08);
 
+  /* Quick start, long gentle settle. */
+  --ease-soft: cubic-bezier(0.22, 1, 0.36, 1);
+
   --animate-float: float 7s ease-in-out infinite;
   @keyframes float {
     0%, 100% { transform: translateY(0) rotate(var(--tilt, 0deg)); }
