@@ -1,3 +1,4 @@
+import { RibbonGlyph } from "@/components/brand/pink-ribbon"
 import type { Title } from "@/content/types"
 import { cn } from "@/lib/utils"
 
@@ -19,28 +20,30 @@ export function Petal({ className }: { className?: string }) {
   )
 }
 
+const shapes = { petal: Petal, sparkle: Sparkle, ribbon: RibbonGlyph }
+
 type Floater = {
-  kind: "petal" | "sparkle"
+  kind: keyof typeof shapes
   className: string
   tilt?: number
   delay?: number
 }
 
 /**
- * Petals and sparkles that drift gently. Purely decorative; motion is
+ * Petals, sparkles and ribbons that drift gently. Purely decorative; motion is
  * skipped for people who prefer reduced motion.
  */
 export function Floaters({ items }: { items: Floater[] }) {
   return (
     <div aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden">
       {items.map((f, i) => {
-        const Shape = f.kind === "petal" ? Petal : Sparkle
+        const Shape = shapes[f.kind]
         return (
           <span
             key={i}
             className={cn(
               "absolute block",
-              f.kind === "petal" ? "motion-safe:animate-float" : "motion-safe:animate-twinkle",
+              f.kind === "sparkle" ? "motion-safe:animate-twinkle" : "motion-safe:animate-float",
               f.className
             )}
             style={

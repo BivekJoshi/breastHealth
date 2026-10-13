@@ -1,8 +1,10 @@
 import Link from "next/link"
 import { Clock, Mail, MapPin, Phone } from "lucide-react"
 import { Logo } from "@/components/brand/logo"
+import { PinkRibbon } from "@/components/brand/pink-ribbon"
 import { WaveEdge } from "@/components/brand/doodles"
 import { common } from "@/content/common"
+import { pinkOctober } from "@/content/pink-october"
 import { nav, paths, site } from "@/content/site"
 import { getI18n } from "@/i18n/server"
 
@@ -24,6 +26,10 @@ export async function SiteFooter() {
           <div className="max-w-sm space-y-4">
             <Logo />
             <p className="leading-relaxed text-mauve">{t(site.description)}</p>
+            <p className="inline-flex items-center gap-2 rounded-full bg-white py-1.5 pr-4 pl-2.5 text-sm font-bold text-rose-deep shadow-sm">
+              <PinkRibbon animated={false} className="h-6 w-auto shrink-0" />
+              {t(pinkOctober.statement)}
+            </p>
           </div>
 
           <div>

@@ -61,6 +61,12 @@
       transform: scale(0.8);
     }
   }
+  --animate-orbit: orbit 40s linear infinite;
+  @keyframes orbit {
+    to {
+      transform: rotate(1turn);
+    }
+  }
 }
 
 @theme inline {
@@ -206,4 +212,76 @@
   );
   -webkit-mask-image: var(--lens-mask);
   mask-image: var(--lens-mask);
+}
+
+/* ─── Pink ribbon (pink-ribbon.tsx) ────────────────────────────────
+   Each strand has pathLength=1, so a one-unit dash draws it in: the
+   back strand first, then the one crossing in front. Then the ribbon
+   sways from the top of its loop, and every few seconds a glint runs
+   along it from tail to tail. */
+.pink-ribbon .ribbon-glint {
+  display: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .pink-ribbon[data-animated] {
+    transform-origin: 50% 7%;
+    animation: ribbon-sway 7s ease-in-out 1.8s infinite;
+  }
+  .pink-ribbon[data-animated] .ribbon-strand {
+    stroke-dasharray: 1 1;
+    animation: ribbon-draw 1.1s var(--ease-soft) both;
+  }
+  .pink-ribbon[data-animated] .ribbon-front {
+    animation-duration: 0.8s;
+    animation-delay: 0.8s;
+  }
+  .pink-ribbon[data-animated] .ribbon-shade {
+    animation: ribbon-fade 0.4s ease-out 1.1s both;
+  }
+  .pink-ribbon[data-animated] .ribbon-glint {
+    display: inline;
+    stroke-opacity: 0.7;
+    stroke-dasharray: 0.07 2;
+    animation: ribbon-glint 6s ease-in-out 2.4s infinite both;
+  }
+}
+
+@keyframes ribbon-draw {
+  from {
+    stroke-dashoffset: 1;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes ribbon-fade {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes ribbon-sway {
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+  30% {
+    transform: rotate(-3deg);
+  }
+  70% {
+    transform: rotate(3deg);
+  }
+}
+
+/* The dash waits just before the first tail, crosses, then rests past the other. */
+@keyframes ribbon-glint {
+  0% {
+    stroke-dashoffset: 0.08;
+  }
+  35%,
+  100% {
+    stroke-dashoffset: -1.01;
+  }
 }

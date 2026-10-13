@@ -5,7 +5,9 @@ import Image from "next/image"
 import Link from "next/link"
 import { ArrowRight, Check, Heart } from "lucide-react"
 import heroWoman from "@/assets/HeroWomen.png"
+import { RibbonSeal } from "@/components/brand/pink-ribbon"
 import { hero } from "@/content/home"
+import { pinkOctober } from "@/content/pink-october"
 import { paths } from "@/content/site"
 import { intlLocale } from "@/i18n/config"
 import { useI18n } from "@/i18n/client"
@@ -36,7 +38,7 @@ const THERMAL_BOX = {
 
 /**
  * The home hero's picture: the photo, with a small thermal scan card over
- * her chest and a sample result. Pointing at the scan reads the temperature
+ * her chest, a sample result, and the pink ribbon seal for October. Pointing at the scan reads the temperature
  * there; nothing moves on its own.
  */
 export function ScanPortrait({ className }: { className?: string }) {
@@ -56,6 +58,14 @@ export function ScanPortrait({ className }: { className?: string }) {
         />
 
         <ScanCard />
+
+        {/* the hazy top-left corner, opposite the sample result */}
+        <RibbonSeal
+          text={t(pinkOctober.seal)}
+          repeat={t(pinkOctober.sealRepeat)}
+          label={t(pinkOctober.statement)}
+          className="absolute -top-[4%] -left-[3%] w-28 sm:-left-[8%] sm:w-32 lg:-left-[10%] xl:-left-[16%] xl:w-36"
+        />
 
         <p
           aria-hidden
