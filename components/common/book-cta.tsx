@@ -17,6 +17,8 @@ export async function BookCta() {
             { kind: "petal", className: "right-[10%] bottom-10 size-12 text-white/20", tilt: 35, delay: 2 },
             { kind: "sparkle", className: "top-12 right-[18%] size-6 text-heat-4", delay: 0.4 },
             { kind: "sparkle", className: "bottom-16 left-[16%] size-4 text-white/70", delay: 1.4 },
+            { kind: "ribbon", className: "top-10 right-[7%] h-16 w-12 text-white/25", tilt: 16, delay: 0.8 },
+            { kind: "ribbon", className: "bottom-8 left-[5%] hidden h-12 w-9 text-white/20 sm:block", tilt: -18, delay: 2.6 },
           ]}
         />
         <p lang={altLocale} className="text-xl font-semibold text-white/90">

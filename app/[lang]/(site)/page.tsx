@@ -5,6 +5,7 @@ import { CentresTeaser } from "@/sections/home/centres-teaser"
 import { Faq } from "@/sections/home/faq"
 import { Hero } from "@/sections/home/hero"
 import { KnowYourBody } from "@/sections/home/know-your-body"
+import { PinkOctober } from "@/sections/home/pink-october"
 import { Promises } from "@/sections/home/promises"
 import { VisitTimeline } from "@/sections/home/visit-timeline"
 
@@ -16,6 +17,7 @@ export default function HomePage() {
   return (
     <>
       <Hero />
+      <PinkOctober />
       <Promises />
       <VisitTimeline />
       <AgeRange />

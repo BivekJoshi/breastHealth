@@ -1,4 +1,5 @@
 import { AccentTitle, Floaters } from "@/components/brand/doodles"
+import { PinkRibbon } from "@/components/brand/pink-ribbon"
 import { AltTag } from "@/components/common/section-intro"
 import type { SectionCopy } from "@/content/types"
 import { plainTitle } from "@/i18n/i18n"
@@ -18,6 +19,8 @@ export async function PageIntro({ copy }: { copy: SectionCopy }) {
             { kind: "sparkle", className: "right-[8%] bottom-14 size-4 text-rose/50", delay: 1.8 },
           ]}
         />
+        {/* the awareness ribbon, in the space beside the heading */}
+        <PinkRibbon className="absolute top-1/2 right-[16%] hidden h-[62%] max-h-56 -translate-y-1/2 lg:block" />
         <div className="relative mx-auto max-w-7xl px-5 py-16 sm:px-8 sm:py-24">
           <AltTag lang={altLocale}>{plainTitle(alt(copy.title))}</AltTag>
           <h1 className="mt-5 max-w-3xl font-display text-[clamp(2.75rem,6.5vw,5.25rem)] leading-[1.02] font-semibold text-balance text-berry">

@@ -25,6 +25,8 @@ export const paths = {
   screening: "/screening",
   locations: "/locations",
   faq: "/#faq",
+  /** The home page's "Know your body" section. */
+  know: "/#know",
   book: "/book",
 } as const
 
