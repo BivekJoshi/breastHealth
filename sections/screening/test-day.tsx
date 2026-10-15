@@ -18,7 +18,7 @@ async function ChecklistCard({
   return (
     <section aria-labelledby={id} className={cn("rounded-[2.5rem] p-8 sm:p-10", className)}>
       <AltTag lang={altLocale}>{alt(list.title)}</AltTag>
-      <h2 id={id} className="mt-5 font-display text-[clamp(2rem,3.6vw,2.75rem)] leading-tight font-semibold">
+      <h2 id={id} className="mt-5 font-display text-[clamp(2rem,3.6vw,2.75rem)] leading-tight font-semibold text-navy">
         {t(list.title)}
       </h2>
       <ul className="mt-7 space-y-4">

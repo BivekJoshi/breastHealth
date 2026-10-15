@@ -36,7 +36,7 @@ export default async function LocationsPage() {
       </section>
 
       <section aria-labelledby="away" className="mx-auto max-w-7xl px-5">
-        <h2 id="away" className="font-display text-[clamp(2rem,4vw,2.75rem)] font-semibold">
+        <h2 id="away" className="font-display text-[clamp(2rem,4vw,2.75rem)] font-semibold text-navy">
           {t(away.title)}
         </h2>
         <div className="mt-8 grid gap-5 md:grid-cols-2">

@@ -39,7 +39,7 @@ export function BookingForm({ defaultCentre = "" }: { defaultCentre?: string }) 
         <span className="grid size-16 place-items-center rounded-full bg-blush">
           <CircleCheck className="size-9 text-rose" />
         </span>
-        <h2 className="font-display text-3xl font-semibold">{t(copy.sentTitle)}</h2>
+        <h2 className="font-display text-3xl font-semibold text-navy">{t(copy.sentTitle)}</h2>
         <p className="max-w-md text-lg text-mauve">{t(copy.sentText)(sent.name, sent.phone)}</p>
         <Button variant="outline" size="lg" className="h-11 rounded-full px-5" onClick={() => setSent(null)}>
           {t(copy.again)}

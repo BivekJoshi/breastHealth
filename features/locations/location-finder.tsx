@@ -141,7 +141,7 @@ export function LocationFinder({
               <section key={c.id} aria-labelledby={`city-${c.id}`}>
                 <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
                   <GuransMark className="size-7" />
-                  <h2 id={`city-${c.id}`} className="font-display text-3xl font-semibold">
+                  <h2 id={`city-${c.id}`} className="font-display text-3xl font-semibold text-navy">
                     {t(c)}
                   </h2>
                   <span lang={altLocale} className="text-lg font-semibold text-rose-deep">

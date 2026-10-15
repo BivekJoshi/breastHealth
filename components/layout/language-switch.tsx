@@ -38,7 +38,7 @@ export function LanguageSwitch({ full = false, className }: { full?: boolean; cl
                 router.push(target + window.location.search)
               }
             }}
-            className="rounded-full px-3 py-1.5 text-sm leading-none font-extrabold text-berry transition-colors hover:text-rose-deep aria-[current=true]:bg-rose aria-[current=true]:text-white aria-[current=true]:shadow-soft"
+            className="rounded-full px-3 py-1.5 text-sm leading-none font-extrabold text-navy transition-colors hover:text-rose-deep aria-[current=true]:bg-rose aria-[current=true]:text-white aria-[current=true]:shadow-soft"
           >
             {full ? (
               name.full

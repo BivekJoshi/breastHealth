@@ -1,6 +1,6 @@
 import { PETAL_ANGLES, PETAL_PATH } from "@/components/brand/gurans"
 
-/** The small gurans flower used in the logo and as a bullet. */
+/** The small gurans flower used as a bullet. */
 export function GuransMark({ className }: { className?: string }) {
   return (
     <svg viewBox="-100 -100 200 200" className={className} aria-hidden="true">

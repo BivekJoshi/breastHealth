@@ -56,13 +56,13 @@ export async function VisitTimeline() {
                 ))}
               </svg>
               <span className="absolute inset-0 grid place-content-center text-center">
-                <span className="font-display text-5xl leading-none font-semibold text-berry tabular-nums sm:text-6xl">
+                <span className="font-display text-5xl leading-none font-semibold text-navy tabular-nums sm:text-6xl">
                   {num(totalMinutes)}
                 </span>
                 <span className="mt-1 text-sm font-bold text-mauve">{t(visitCopy.unit)}</span>
               </span>
               {/* the finish line, at 12 o'clock */}
-              <span className="absolute top-[7.5%] left-1/2 grid size-7 -translate-1/2 place-items-center rounded-full bg-berry text-white ring-4 ring-white sm:size-8">
+              <span className="absolute top-[7.5%] left-1/2 grid size-7 -translate-1/2 place-items-center rounded-full bg-navy text-white ring-4 ring-white sm:size-8">
                 <Heart className="size-3.5 fill-current" />
               </span>
               <Sparkle className="absolute -top-1 -right-3 size-5 text-rose/40" />
@@ -95,7 +95,7 @@ export async function VisitTimeline() {
               </li>
             ))}
             <li className="group grid grid-cols-[3rem_minmax(0,1fr)] gap-4 lg:flex lg:flex-col">
-              <span className="grid size-12 place-items-center rounded-full bg-berry text-white shadow-soft ring-4 ring-blush transition-transform duration-300 ease-soft group-hover:scale-110">
+              <span className="grid size-12 place-items-center rounded-full bg-navy text-white shadow-soft ring-4 ring-blush transition-transform duration-300 ease-soft group-hover:scale-110">
                 <Heart className="size-5 fill-current" />
               </span>
               <div className="on-rose rounded-[1.75rem] bg-linear-to-br from-rose to-[#e0508a] p-6 text-white shadow-lift lg:flex-1">
