@@ -24,7 +24,7 @@ export async function SiteFooter() {
       <div className="bg-blush">
         <div className="mx-auto grid max-w-7xl gap-12 px-5 pt-10 pb-14 md:grid-cols-[1.3fr_1fr_0.8fr]">
           <div className="max-w-sm space-y-4">
-            <Logo />
+            <Logo className="h-20" />
             <p className="leading-relaxed text-mauve">{t(site.description)}</p>
             <p className="inline-flex items-center gap-2 rounded-full bg-white py-1.5 pr-4 pl-2.5 text-sm font-bold text-rose-deep shadow-sm">
               <PinkRibbon animated={false} className="h-6 w-auto shrink-0" />
@@ -33,7 +33,7 @@ export async function SiteFooter() {
           </div>
 
           <div>
-            <h2 className="font-display text-lg font-semibold">{t(common.footer.visit)}</h2>
+            <h2 className="font-display text-lg font-semibold text-navy">{t(common.footer.visit)}</h2>
             <ul className="mt-4 space-y-3">
               {contact.map(({ icon: Icon, value, href: link }) => (
                 <li key={value} className="flex items-start gap-3">
@@ -53,7 +53,7 @@ export async function SiteFooter() {
           </div>
 
           <div>
-            <h2 className="font-display text-lg font-semibold">{t(common.footer.pages)}</h2>
+            <h2 className="font-display text-lg font-semibold text-navy">{t(common.footer.pages)}</h2>
             <ul className="mt-4 space-y-2.5">
               {links.map((item) => (
                 <li key={item.path}>

@@ -50,7 +50,7 @@ export async function SectionIntro({
       <AltTag lang={altLocale}>{plainTitle(alt(copy.title))}</AltTag>
       <h2
         id={id}
-        className="mt-5 font-display text-[clamp(2.2rem,4.4vw,3.4rem)] leading-[1.08] font-semibold text-balance text-berry"
+        className="mt-5 font-display text-[clamp(2.2rem,4.4vw,3.4rem)] leading-[1.08] font-semibold text-balance text-navy"
       >
         <AccentTitle title={t(copy.title)} />
       </h2>

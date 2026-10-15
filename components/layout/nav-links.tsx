@@ -31,7 +31,7 @@ export function NavLinks({
             onClick={onNavigate}
             aria-current={active ? "page" : undefined}
             className={cn(
-              "rounded-full text-berry transition-colors hover:bg-blush hover:text-rose-deep aria-[current=page]:bg-blush aria-[current=page]:text-rose-deep",
+              "rounded-full text-navy transition-colors hover:bg-blush hover:text-rose-deep aria-[current=page]:bg-blush aria-[current=page]:text-rose-deep",
               linkClassName
             )}
           >

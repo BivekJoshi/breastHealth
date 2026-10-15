@@ -23,7 +23,7 @@ export async function PageIntro({ copy }: { copy: SectionCopy }) {
         <PinkRibbon className="absolute top-1/2 right-[16%] hidden h-[62%] max-h-56 -translate-y-1/2 lg:block" />
         <div className="relative mx-auto max-w-7xl px-5 py-16 sm:px-8 sm:py-24">
           <AltTag lang={altLocale}>{plainTitle(alt(copy.title))}</AltTag>
-          <h1 className="mt-5 max-w-3xl font-display text-[clamp(2.75rem,6.5vw,5.25rem)] leading-[1.02] font-semibold text-balance text-berry">
+          <h1 className="mt-5 max-w-3xl font-display text-[clamp(2.75rem,6.5vw,5.25rem)] leading-[1.02] font-semibold text-balance text-navy">
             <AccentTitle title={t(copy.title)} />
           </h1>
           {copy.lead && (

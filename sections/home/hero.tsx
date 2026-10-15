@@ -36,10 +36,10 @@ export async function Hero() {
 
           <h1
             id="hero"
-            className="mt-7 font-display text-[clamp(2.5rem,4.3vw,4.1rem)] leading-[1.06] font-semibold text-berry"
+            className="mt-7 font-display text-[clamp(2.5rem,4.3vw,4.1rem)] leading-[1.06] font-semibold text-navy"
           >
             <span className="block">{title.first}</span>
-            {title.soft && <span className="text-mauve">{title.soft}</span>}
+            {title.soft && <span className="text-navy">{title.soft}</span>}
             <Script className="text-[1.15em] leading-[0.8]">{title.accent}</Script>
             {title.after}
           </h1>

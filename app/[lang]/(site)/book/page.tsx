@@ -35,7 +35,7 @@ export default async function BookPage() {
 
         <aside className="space-y-6">
           <section aria-labelledby="next" className="rounded-[2.25rem] bg-lilac p-7">
-            <h2 id="next" className="font-display text-2xl font-semibold">
+            <h2 id="next" className="font-display text-2xl font-semibold text-navy">
               {t(bookingPage.next)}
             </h2>
             <ol className="mt-5 space-y-4">
@@ -54,7 +54,7 @@ export default async function BookPage() {
           </section>
 
           <section aria-labelledby="reach" className="rounded-[2.25rem] bg-blush p-7">
-            <h2 id="reach" className="font-display text-2xl font-semibold">
+            <h2 id="reach" className="font-display text-2xl font-semibold text-navy">
               {t(bookingPage.talk)}
             </h2>
             <dl className="mt-5 space-y-4">
