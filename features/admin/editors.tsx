@@ -24,6 +24,7 @@ import type {
 } from "./admin-api"
 import { Field, FormMessage, TextAreaField, TextField, VisibleField, fieldClass, useApiForm } from "./form"
 import { formatDay, formatReceived, placeOf } from "./format"
+import { NewsImagesField } from "./news-images-field"
 
 /*
  * The slide-over forms. Each sends camelCase fields — the names the API
@@ -40,6 +41,7 @@ function EditorShell({
   message,
   saving,
   submitLabel,
+  waitingLabel,
   children,
 }: {
   title: string
@@ -48,6 +50,8 @@ function EditorShell({
   message: string | null
   saving: boolean
   submitLabel: string
+  /** Set while the form cannot be sent yet, e.g. "Uploading photos…". */
+  waitingLabel?: string | null
   children: React.ReactNode
 }) {
   return (
@@ -61,8 +65,8 @@ function EditorShell({
         {children}
       </div>
       <div className="mt-auto flex gap-2 px-6 py-6">
-        <Button type="submit" size="lg" className="h-11 rounded-full px-6" disabled={saving}>
-          {saving ? "Saving…" : submitLabel}
+        <Button type="submit" size="lg" className="h-11 rounded-full px-6" disabled={saving || !!waitingLabel}>
+          {saving ? "Saving…" : (waitingLabel ?? submitLabel)}
         </Button>
       </div>
     </form>
@@ -427,16 +431,18 @@ export function NewsEditor({
     summaryNe: post?.summary_ne ?? "",
     bodyEn: post?.body_en ?? "",
     bodyNe: post?.body_ne ?? "",
-    imageUrl: post?.image_url ?? "",
     publishedAt: post?.published_at ?? today,
     isActive: post?.is_active ?? true,
   })
   const set = (patch: Partial<typeof values>) => setValues((v) => ({ ...v, ...patch }))
+  const [images, setImages] = useState(post?.images ?? [])
+  const [uploading, setUploading] = useState(false)
 
   const { errors, message, saving, onSubmit } = useApiForm(async () => {
     await request(post ? `/admin/news/${post.id}` : "/admin/news", {
       method: post ? "PATCH" : "POST",
-      body: values,
+      // The photos are already uploaded; the post records which ones, in order.
+      body: { ...values, imageIds: images.map((image) => image.id) },
     })
     onSaved(post ? `Saved “${values.titleEn.trim()}”.` : `Added “${values.titleEn.trim()}”.`)
   })
@@ -449,6 +455,7 @@ export function NewsEditor({
       message={message}
       saving={saving}
       submitLabel={post ? "Save post" : "Add post"}
+      waitingLabel={uploading ? "Uploading photos…" : null}
     >
       <TextField
         id="news-title-en"
@@ -507,16 +514,12 @@ export function NewsEditor({
         onChange={(e) => set({ bodyNe: e.target.value })}
         error={errors.bodyNe}
       />
-      <TextField
-        id="news-image"
-        label="Image link"
-        hint="optional"
-        type="url"
-        inputMode="url"
-        placeholder="https://…/photo.jpg"
-        value={values.imageUrl}
-        onChange={(e) => set({ imageUrl: e.target.value })}
-        error={errors.imageUrl}
+      <NewsImagesField
+        images={images}
+        setImages={setImages}
+        request={request}
+        onBusyChange={setUploading}
+        error={errors.imageIds}
       />
       <TextField
         id="news-date"

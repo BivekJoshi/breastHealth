@@ -13,6 +13,9 @@ export const API_URL = (
   (process.env.NODE_ENV === "development" ? "http://localhost:4000/api" : "/api")
 ).replace(/\/+$/, "")
 
+/** A file the API serves, from the path it returned (e.g. a news photo's "/news/images/<key>"). */
+export const apiAsset = (path: string) => `${API_URL}${path}`
+
 /** What the API sends back on failure: a message, plus per-field messages for forms. */
 export class ApiError extends Error {
   constructor(
@@ -26,18 +29,22 @@ export class ApiError extends Error {
 
 type Options = Omit<RequestInit, "body"> & { body?: unknown; token?: string | null }
 
-/** JSON in, JSON out. Throws ApiError with the server's { error, details }. */
+/**
+ * JSON in, JSON out — or a Blob in, sent as the raw bytes (a photo upload).
+ * Throws ApiError with the server's { error, details }.
+ */
 export async function apiFetch<T>(path: string, { body, token, headers, ...init }: Options = {}): Promise<T> {
+  const file = body instanceof Blob ? body : null
   let response: Response
   try {
     response = await fetch(`${API_URL}${path}`, {
       ...init,
       headers: {
-        ...(body !== undefined && { "Content-Type": "application/json" }),
+        ...(body !== undefined && { "Content-Type": file ? file.type || "application/octet-stream" : "application/json" }),
         ...(token && { Authorization: `Bearer ${token}` }),
         ...headers,
       },
-      body: body === undefined ? undefined : JSON.stringify(body),
+      body: body === undefined ? undefined : file ?? JSON.stringify(body),
     })
   } catch {
     throw new ApiError(0, "Cannot reach the server. Is the API running?")

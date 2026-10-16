@@ -9,7 +9,7 @@ import { paths } from "@/content/site"
 import type { Bilingual } from "@/content/types"
 import { intlLocale } from "@/i18n/config"
 import { useI18n } from "@/i18n/client"
-import { apiFetch } from "@/lib/api"
+import { apiAsset, apiFetch } from "@/lib/api"
 
 /* The shapes GET /api/news and GET /api/news/:slug return. */
 
@@ -17,12 +17,14 @@ type NewsSummary = {
   id: string
   title: Bilingual
   summary: Bilingual
+  /** The cover photo's API path, for apiAsset(). */
   image: string | null
   /** YYYY-MM-DD */
   date: string
 }
 
-type NewsPost = NewsSummary & { body: Bilingual }
+/** `images` is every photo, cover first. */
+type NewsPost = NewsSummary & { images: string[]; body: Bilingual }
 
 type Load<T> = { status: "loading" } | { status: "ready"; data: T } | { status: "error"; missing: boolean }
 
@@ -78,9 +80,9 @@ function NewsList() {
           <li key={post.id}>
             <article className="flex h-full flex-col overflow-hidden rounded-[2.25rem] bg-white shadow-soft">
               {post.image && (
-                // Any address the admin pastes, size unknown — a plain img, not next/image.
+                // An upload served by the API, size unknown — a plain img, not next/image.
                 // eslint-disable-next-line @next/next/no-img-element
-                <img src={post.image} alt="" loading="lazy" className="aspect-video w-full object-cover" />
+                <img src={apiAsset(post.image)} alt="" loading="lazy" className="aspect-video w-full object-cover" />
               )}
               <div className="flex flex-1 flex-col p-7">
                 <p className="inline-flex items-center gap-1.5 text-sm font-bold text-mauve">
@@ -111,7 +113,7 @@ function NewsList() {
 }
 
 function NewsArticle({ slug }: { slug: string }) {
-  const { t, href } = useI18n()
+  const { t, href, num } = useI18n()
   const formatDate = useFormatDate()
   const news = useApi<{ post: NewsPost }>(`/news/${encodeURIComponent(slug)}`)
 
@@ -134,6 +136,7 @@ function NewsArticle({ slug }: { slug: string }) {
   }
 
   const { post } = news.data
+  const [cover, ...gallery] = post.images
   // Plain text from the admin: a blank line starts a new paragraph.
   const paragraphs = t(post.body)
     .split(/\n\s*\n/)
@@ -151,9 +154,9 @@ function NewsArticle({ slug }: { slug: string }) {
         {t(post.title)}
       </h2>
       {t(post.summary) && <p className="mt-4 text-xl leading-relaxed text-mauve">{t(post.summary)}</p>}
-      {post.image && (
+      {cover && (
         // eslint-disable-next-line @next/next/no-img-element
-        <img src={post.image} alt="" className="mt-8 w-full rounded-[2rem] object-cover shadow-soft" />
+        <img src={apiAsset(cover)} alt="" className="mt-8 w-full rounded-[2rem] object-cover shadow-soft" />
       )}
       <div className="mt-8 space-y-5 text-lg leading-relaxed text-berry">
         {paragraphs.map((p, i) => (
@@ -162,6 +165,29 @@ function NewsArticle({ slug }: { slug: string }) {
           </p>
         ))}
       </div>
+      {gallery.length > 0 && (
+        <ul className="mt-10 grid grid-cols-2 gap-3 sm:grid-cols-3">
+          {gallery.map((src, i) => (
+            <li key={src}>
+              {/* Opens the full photo in a new tab. */}
+              <a
+                href={apiAsset(src)}
+                target="_blank"
+                rel="noopener"
+                className="block overflow-hidden rounded-2xl shadow-soft transition-transform hover:scale-[1.02]"
+              >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={apiAsset(src)}
+                  alt={`${t(copy.photo)} ${num(i + 2)} — ${t(post.title)}`}
+                  loading="lazy"
+                  className="aspect-square w-full object-cover"
+                />
+              </a>
+            </li>
+          ))}
+        </ul>
+      )}
     </article>
   )
 }

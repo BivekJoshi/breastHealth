@@ -2,11 +2,12 @@
 
 import { useCallback, useEffect, useState } from "react"
 import Link from "next/link"
-import { CalendarDays, ExternalLink, Newspaper, Plus } from "lucide-react"
+import { CalendarDays, ExternalLink, Images, Newspaper, Plus } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent } from "@/components/ui/sheet"
 import { paths } from "@/content/site"
 import { useI18n } from "@/i18n/client"
+import { apiAsset } from "@/lib/api"
 import { cn } from "@/lib/utils"
 import type { AdminNews, AdminNewsPost, AdminRequest } from "./admin-api"
 import { NewsEditor } from "./editors"
@@ -92,7 +93,15 @@ export function NewsManager({ request }: { request: AdminRequest }) {
               const scheduled = post.is_active && post.published_at > data.today
               return (
                 <li key={post.id} className="flex flex-wrap items-center gap-x-4 gap-y-2 py-3.5">
-                  <div className="min-w-0 flex-1">
+                  <div className="grid size-14 shrink-0 place-items-center overflow-hidden rounded-xl bg-blush">
+                    {post.images[0] ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img src={apiAsset(post.images[0].url)} alt="" className="size-full object-cover" />
+                    ) : (
+                      <Newspaper className="size-5 text-rose" />
+                    )}
+                  </div>
+                  <div className="min-w-0 flex-1 basis-56">
                     <p className="flex flex-wrap items-center gap-2 font-bold text-berry">
                       {post.title_en}
                       {scheduled && <span className={cn(badge, "bg-lilac text-lilac-deep")}>Scheduled</span>}
@@ -103,6 +112,12 @@ export function NewsManager({ request }: { request: AdminRequest }) {
                         <CalendarDays className="size-3.5" />
                         {formatDay(post.published_at)}
                       </span>
+                      {post.images.length > 0 && (
+                        <span className="inline-flex items-center gap-1">
+                          <Images className="size-3.5" />
+                          {post.images.length} {post.images.length === 1 ? "photo" : "photos"}
+                        </span>
+                      )}
                       {isLive(post) && (
                         <Link
                           href={`${href(paths.news)}?post=${post.slug}`}

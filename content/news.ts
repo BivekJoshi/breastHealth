@@ -27,6 +27,7 @@ export const newsCopy = {
   empty: { en: "No news yet — check back soon.", ne: "अहिलेसम्म कुनै समाचार छैन — छिट्टै फेरि हेर्नुहोस्।" },
   readMore: { en: "Read more", ne: "थप पढ्नुहोस्" },
   back: { en: "All news", ne: "सबै समाचार" },
+  photo: { en: "Photo", ne: "तस्बिर" },
   missing: {
     en: "This post is no longer available.",
     ne: "यो समाचार अब उपलब्ध छैन।",

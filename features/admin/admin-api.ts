@@ -65,6 +65,9 @@ export type AdminAppointments = {
   pageSize: number
 }
 
+/** An uploaded photo. `url` is relative to the API — show it with apiAsset(). */
+export type AdminNewsImage = { id: number; url: string }
+
 export type AdminNewsPost = {
   id: number
   slug: string
@@ -74,7 +77,8 @@ export type AdminNewsPost = {
   summary_ne: string
   body_en: string
   body_ne: string
-  image_url: string
+  /** The first one is the cover. */
+  images: AdminNewsImage[]
   /** YYYY-MM-DD. A future date keeps the post off the site until then. */
   published_at: string
   is_active: boolean
