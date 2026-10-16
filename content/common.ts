@@ -18,6 +18,7 @@ export const common = {
     },
   },
 
+  
   cta: {
     title: {
       en: { before: "Book thirty minutes ", accent: "for yourself" },
