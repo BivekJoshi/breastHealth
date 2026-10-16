@@ -49,6 +49,23 @@ export const bookingForm = {
     ne: "लक्षण, प्रश्न, वा तपाईंलाई मिल्ने समय",
   },
   submit: { en: "Request appointment", ne: "अपोइन्टमेन्ट अनुरोध गर्नुहोस्" },
+  sending: { en: "Sending…", ne: "पठाउँदै…" },
+  invalid: {
+    en: "Please check the highlighted details and try again.",
+    ne: "कृपया रातो देखिएका विवरण जाँचेर फेरि प्रयास गर्नुहोस्।",
+  },
+  pastDate: {
+    en: "The preferred date has already passed — choose today or a later day.",
+    ne: "रुचाइएको मिति बितिसकेको छ — आज वा पछिको दिन छान्नुहोस्।",
+  },
+  tooMany: {
+    en: (phone) => `We’ve received several requests from this connection. Please call us on ${phone} instead.`,
+    ne: (phone) => `यो जडानबाट धेरै अनुरोध आइसकेका छन्। कृपया ${phone} मा फोन गर्नुहोस्।`,
+  } satisfies Bilingual<(phone: string) => string>,
+  failed: {
+    en: (phone) => `Your request could not be sent. Please try again, or call us on ${phone}.`,
+    ne: (phone) => `तपाईंको अनुरोध पठाउन सकिएन। फेरि प्रयास गर्नुहोस्, वा ${phone} मा फोन गर्नुहोस्।`,
+  } satisfies Bilingual<(phone: string) => string>,
   sentTitle: { en: "Appointment requested.", ne: "अपोइन्टमेन्ट अनुरोध पठाइयो।" },
   sentText: {
     en: (name, phone) => `Thank you, ${name}. We’ll call you on ${phone} to confirm a time.`,

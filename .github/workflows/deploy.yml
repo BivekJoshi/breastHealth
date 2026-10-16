@@ -16,6 +16,8 @@ name: Deploy to cPanel
 #              CPANEL_FTP_REMOTE_DIR  /   (the account lands in the document root)
 #              CPANEL_FTP_VERIFY_CERT no  (see below)
 #              NODE_VERSION           22
+#              NEXT_PUBLIC_API_URL    /api  (the locations API, baked into the build;
+#                                     e.g. https://api.breastscan.health/api)
 #
 # Certificate verification is off by default: the server's FTP certificate is
 # for whgi.net / *.stableserver.net, which no hostname for this server matches.
@@ -55,6 +57,9 @@ jobs:
 
       - name: Build static site
         run: npm run build
+        env:
+          # Empty when the variable is unset; lib/api.ts then falls back to /api.
+          NEXT_PUBLIC_API_URL: ${{ vars.NEXT_PUBLIC_API_URL }}
 
       # mirror --delete removes whatever the build did not produce, so a broken
       # build must never reach the upload step and empty the live site.

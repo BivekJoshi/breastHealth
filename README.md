@@ -48,13 +48,17 @@ app/
     (site)/               route group sharing header + footer
       page.tsx            home — only composes sections
       screening/ locations/ book/
-content/                  all copy and data as { en, ne }, typed (edit here, not in components)
+    admin/                locations admin (sign in, manage cities + centres); no header/footer, noindex
+content/                  all copy as { en, ne }, typed (edit here, not in components)
   site.ts common.ts home.ts screening.ts awareness.ts faqs.ts locations.ts booking.ts types.ts
 features/                 interactive pieces with their own logic
   thermal-lens/           hero lens: torso.ts (drawing + heat sources), heat.ts (temperature map), torso-figure.tsx,
                           body-map.tsx (points + card), use-thermal-lens.ts (rAF loop, tour); gurans-bloom.tsx for /screening
-  locations/              directory.ts (pure filter/group helpers), finder UI, ?city= deep links
+  locations/              use-locations.ts (fetches GET /api/locations once per page load), directory.ts
+                          (filter/group helpers over that response), finder UI, ?city= deep links
   booking/                form, ?centre= pre-selection
+  admin/                  the admin screen: sign-in, city/centre lists, slide-over editors
+lib/api.ts                API base URL (NEXT_PUBLIC_API_URL) and the fetch helper
 sections/                 page sections (server components)
   home/ screening/
 components/
@@ -63,11 +67,19 @@ components/
   layout/ common/
 ```
 
-Each `*-from-url.tsx` wrapper reads search params inside `<Suspense>`. The fallback is the same component with default props, so the static HTML still contains the full centre list and the full form.
+Each `*-from-url.tsx` wrapper reads search params inside `<Suspense>`. The fallback is the same component with default props.
+
+## Locations (from the API)
+
+Provinces, cities and screening centres are not in the code. They come from the Express + MySQL API in [../BreastScanBackend](../BreastScanBackend) at runtime, so a centre added in the admin shows up on the next page load with no rebuild. The locations page, the home-page teaser and the booking form share one request per page load, and each shows a loading, failed or "no centres yet" state of its own.
+
+- **Admin:** `/en/admin` — sign in with the account the backend seeds from its `.env`, then add cities and their centres.
+- **API URL:** `next dev` uses `http://localhost:4000/api`. A production build uses `/api` on the same origin unless `NEXT_PUBLIC_API_URL` is set when it builds, e.g. `NEXT_PUBLIC_API_URL=https://api.breastscan.health/api npm run build`. The deploy workflow passes the repo variable of the same name.
+- The backend's `CLIENT_URL` must list this site's origin, or the browser blocks the requests (CORS).
 
 ## Before going live
 
-- Replace the **sample** phone numbers, email and the 13 centres in `content/site.ts` and `content/locations.ts`.
+- Replace the **sample** phone numbers and email in `content/site.ts`, and add the real centres in the admin.
 - Have a native speaker proofread the Nepali copy.
 - The booking form only shows a confirmation; connect `onSubmit` in `features/booking/booking-form.tsx` to a backend.
 

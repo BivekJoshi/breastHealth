@@ -2,52 +2,97 @@
 
 import { useMemo, useState } from "react"
 import Link from "next/link"
-import { ArrowRight, MapPin, Phone, Search } from "lucide-react"
+import { ArrowRight, MapPin, Phone, RotateCw, Search } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { GuransMark } from "@/components/brand/gurans-mark"
 import { paths } from "@/content/site"
-import {
-  centreTypes,
-  finderCopy as copy,
-  provinces,
-  type Centre,
-  type CityId,
-  type ProvinceId,
-} from "@/content/locations"
+import { finderCopy as copy } from "@/content/locations"
 import { useI18n } from "@/i18n/client"
 import type { I18n } from "@/i18n/i18n"
 import { cn } from "@/lib/utils"
-import { citiesIn, countIn, filterCentres, getCity, getProvince, groupByCity } from "./directory"
+import { HOME_VISIT } from "@/features/booking/choices"
+import type { Centre, Directory } from "./directory"
+import { useLocations } from "./use-locations"
 
 const legend = "text-sm font-extrabold text-berry"
 const pill =
   "rounded-full px-4 py-2 text-sm font-bold transition-colors ring-1 ring-petal bg-white hover:bg-blush aria-pressed:bg-rose aria-pressed:text-white aria-pressed:ring-rose"
 
+/** The finder, once the centre list has loaded. ?province= / ?city= values are checked against it. */
 export function LocationFinder({
   initialProvince = null,
   initialCity = null,
 }: {
-  initialProvince?: ProvinceId | null
-  initialCity?: CityId | null
+  initialProvince?: string | null
+  initialCity?: string | null
+}) {
+  const locations = useLocations()
+  const { t, href } = useI18n()
+
+  if (locations.status === "loading") return <FinderSkeleton label={t(copy.loading)} />
+
+  if (locations.status === "error") {
+    return (
+      <FinderNotice title={t(copy.failed)} hint={t(copy.failedHint)}>
+        <Button variant="outline" size="lg" className="h-11 rounded-full px-5" onClick={locations.retry}>
+          <RotateCw data-icon="inline-start" />
+          {t(copy.retry)}
+        </Button>
+      </FinderNotice>
+    )
+  }
+
+  const { directory } = locations
+
+  if (directory.centres.length === 0) {
+    return (
+      <FinderNotice title={t(copy.empty)} hint={t(copy.emptyHint)}>
+        <Button asChild size="lg" className="h-11 rounded-full px-5">
+          <Link href={`${href(paths.book)}?centre=${HOME_VISIT}`}>
+            {t(copy.bookHome)}
+            <ArrowRight data-icon="inline-end" />
+          </Link>
+        </Button>
+      </FinderNotice>
+    )
+  }
+
+  const city = directory.isCityId(initialCity) ? initialCity : null
+  const province = city
+    ? directory.getCity(city).province
+    : directory.isProvinceId(initialProvince)
+      ? initialProvince
+      : null
+
+  return <Finder directory={directory} initialProvince={province} initialCity={city} />
+}
+
+function Finder({
+  directory,
+  initialProvince,
+  initialCity,
+}: {
+  directory: Directory
+  initialProvince: string | null
+  initialCity: string | null
 }) {
   const i18n = useI18n()
   const { t, alt, altLocale, num } = i18n
+  const { provinces, citiesIn, countIn, filterCentres, getProvince, groupByCity } = directory
 
-  const [province, setProvince] = useState<ProvinceId | null>(
-    initialCity ? getCity(initialCity).province : initialProvince
-  )
-  const [city, setCity] = useState<CityId | null>(initialCity)
+  const [province, setProvince] = useState(initialProvince)
+  const [city, setCity] = useState(initialCity)
   const [query, setQuery] = useState("")
 
   const groups = useMemo(
     () => groupByCity(filterCentres({ province, city, query })),
-    [province, city, query]
+    [groupByCity, filterCentres, province, city, query]
   )
   const total = groups.reduce((n, g) => n + g.centres.length, 0)
   const cityOptions = province ? citiesIn(province) : []
 
-  const pickProvince = (id: ProvinceId | null) => {
+  const pickProvince = (id: string | null) => {
     setProvince(id)
     setCity(null)
   }
@@ -128,13 +173,11 @@ export function LocationFinder({
         </p>
 
         {groups.length === 0 ? (
-          <div className="mt-6 rounded-[2.25rem] bg-white p-10 text-center shadow-soft">
-            <p className="font-display text-2xl font-semibold">{t(copy.noMatch)(query)}</p>
-            <p className="mt-2 text-mauve">{t(copy.noMatchHint)}</p>
-            <Button variant="outline" size="lg" className="mt-6 h-11 rounded-full px-5" onClick={reset}>
+          <FinderNotice title={t(copy.noMatch)(query)} hint={t(copy.noMatchHint)} className="mt-6">
+            <Button variant="outline" size="lg" className="h-11 rounded-full px-5" onClick={reset}>
               {t(copy.showAll)}
             </Button>
-          </div>
+          </FinderNotice>
         ) : (
           <div className="mt-6 space-y-10">
             {groups.map(({ city: c, centres }) => (
@@ -144,16 +187,18 @@ export function LocationFinder({
                   <h2 id={`city-${c.id}`} className="font-display text-3xl font-semibold text-navy">
                     {t(c)}
                   </h2>
-                  <span lang={altLocale} className="text-lg font-semibold text-rose-deep">
-                    {alt(c)}
-                  </span>
+                  {alt(c) !== t(c) && (
+                    <span lang={altLocale} className="text-lg font-semibold text-rose-deep">
+                      {alt(c)}
+                    </span>
+                  )}
                   <span className="ml-auto rounded-full bg-lilac px-3 py-1 text-sm font-bold text-lilac-deep">
                     {t(copy.provinceName)(t(getProvince(c.province)))}
                   </span>
                 </div>
                 <ul className="mt-4 grid gap-4 xl:grid-cols-2">
                   {centres.map((centre) => (
-                    <CentreCard key={centre.id} centre={centre} i18n={i18n} />
+                    <CentreCard key={centre.id} centre={centre} directory={directory} i18n={i18n} />
                   ))}
                 </ul>
               </section>
@@ -165,13 +210,21 @@ export function LocationFinder({
   )
 }
 
-function CentreCard({ centre, i18n: { t, href } }: { centre: Centre; i18n: I18n }) {
+function CentreCard({
+  centre,
+  directory,
+  i18n: { t, href },
+}: {
+  centre: Centre
+  directory: Directory
+  i18n: I18n
+}) {
   const name = t(centre.name)
   return (
     <li className="flex flex-col gap-4 rounded-[1.75rem] bg-white p-6 shadow-soft">
       <div>
         <span className="rounded-full bg-blush px-3 py-1 text-xs font-extrabold text-rose-deep">
-          {t(centreTypes[centre.type])}
+          {t(directory.getType(centre.type))}
         </span>
         <h3 className="mt-3 font-display text-xl font-semibold">{name}</h3>
         <p className="mt-1 flex items-start gap-1.5 text-mauve">
@@ -194,5 +247,52 @@ function CentreCard({ centre, i18n: { t, href } }: { centre: Centre; i18n: I18n 
         </Button>
       </div>
     </li>
+  )
+}
+
+/** A centred card for the empty, failed and no-match states. */
+function FinderNotice({
+  title,
+  hint,
+  className,
+  children,
+}: {
+  title: string
+  hint: string
+  className?: string
+  children: React.ReactNode
+}) {
+  return (
+    <div className={cn("rounded-[2.25rem] bg-white p-10 text-center shadow-soft", className)}>
+      <p className="font-display text-2xl font-semibold">{title}</p>
+      <p className="mt-2 text-mauve">{hint}</p>
+      <div className="mt-6 flex justify-center">{children}</div>
+    </div>
+  )
+}
+
+/** Holds the finder's shape while the list loads, so the page does not jump. */
+function FinderSkeleton({ label }: { label: string }) {
+  const block = "animate-pulse rounded-full bg-blush"
+  return (
+    <div role="status" className="grid gap-8 lg:grid-cols-[18rem_1fr] lg:gap-12">
+      <span className="sr-only">{label}</span>
+      <div aria-hidden className="space-y-7 rounded-[2.25rem] bg-white p-6 shadow-soft">
+        <div className={cn(block, "h-12")} />
+        <div className="flex flex-wrap gap-2">
+          {[16, 20, 18, 22, 20, 18, 24, 26].map((w, i) => (
+            <div key={i} className={cn(block, "h-9")} style={{ width: `${w * 0.25}rem` }} />
+          ))}
+        </div>
+      </div>
+      <div aria-hidden>
+        <div className={cn(block, "h-8 w-48 bg-white shadow-sm")} />
+        <div className="mt-6 grid gap-4 xl:grid-cols-2">
+          {[0, 1, 2, 3].map((i) => (
+            <div key={i} className="h-48 animate-pulse rounded-[1.75rem] bg-white shadow-soft" />
+          ))}
+        </div>
+      </div>
+    </div>
   )
 }
