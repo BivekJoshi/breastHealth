@@ -74,13 +74,20 @@ export const agesCopy: SectionCopy & { caption: Bilingual; gap: Bilingual } = {
 
 export const centresCopy: SectionCopy & {
   summary: Bilingual<(centres: string, cities: string, provinces: string) => string>
+  pending: Bilingual
   cta: Bilingual
   cityLabel: Bilingual<(city: string, count: string) => string>
 } = {
   title: { en: "Find a centre near you.", ne: "नजिकको केन्द्र खोज्नुहोस्।" },
   summary: {
-    en: (c, ci, p) => `${c} centres in ${ci} cities across ${p} provinces. Pick your city to see addresses and call directly.`,
+    en: (c, ci, p) =>
+      `${c} ${c === "1" ? "centre" : "centres"} in ${ci} ${ci === "1" ? "city" : "cities"} across ${p} ${p === "1" ? "province" : "provinces"}. Pick your city to see addresses and call directly.`,
     ne: (c, ci, p) => `${p} प्रदेशका ${ci} सहरमा ${c} केन्द्र। ठेगाना हेर्न र सिधै फोन गर्न आफ्नो सहर छान्नुहोस्।`,
+  },
+  /** When the live list is empty or could not be loaded. */
+  pending: {
+    en: "Screening centres are opening across Nepal. See the locations page for addresses and phone numbers, or book a home visit.",
+    ne: "नेपालभर स्क्रिनिङ केन्द्रहरू खुल्दैछन्। ठेगाना र फोन नम्बरका लागि केन्द्र पृष्ठ हेर्नुहोस्, वा घरमै जाँच बुक गर्नुहोस्।",
   },
   cta: { en: "See all locations", ne: "सबै केन्द्र हेर्नुहोस्" },
   cityLabel: {

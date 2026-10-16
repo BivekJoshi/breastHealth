@@ -1,67 +1,7 @@
-import type { Bilingual, SectionCopy } from "./types"
+import type { SectionCopy } from "./types"
 
-// SAMPLE screening centres — replace with real partner centres before going live.
-
-/** All seven provinces, in official order (east → west). */
-export const provinces = [
-  { id: "koshi", en: "Koshi", ne: "कोशी" },
-  { id: "madhesh", en: "Madhesh", ne: "मधेश" },
-  { id: "bagmati", en: "Bagmati", ne: "बागमती" },
-  { id: "gandaki", en: "Gandaki", ne: "गण्डकी" },
-  { id: "lumbini", en: "Lumbini", ne: "लुम्बिनी" },
-  { id: "karnali", en: "Karnali", ne: "कर्णाली" },
-  { id: "sudurpashchim", en: "Sudurpashchim", ne: "सुदूरपश्चिम" },
-] as const
-
-export type Province = (typeof provinces)[number]
-export type ProvinceId = Province["id"]
-
-/** Cities with at least one centre, grouped by province in the same east → west order. */
-export const cities = [
-  { id: "biratnagar", en: "Biratnagar", ne: "विराटनगर", province: "koshi" },
-  { id: "dharan", en: "Dharan", ne: "धरान", province: "koshi" },
-  { id: "janakpur", en: "Janakpur", ne: "जनकपुर", province: "madhesh" },
-  { id: "kathmandu", en: "Kathmandu", ne: "काठमाडौं", province: "bagmati" },
-  { id: "lalitpur", en: "Lalitpur", ne: "ललितपुर", province: "bagmati" },
-  { id: "bhaktapur", en: "Bhaktapur", ne: "भक्तपुर", province: "bagmati" },
-  { id: "bharatpur", en: "Bharatpur", ne: "भरतपुर", province: "bagmati" },
-  { id: "pokhara", en: "Pokhara", ne: "पोखरा", province: "gandaki" },
-  { id: "butwal", en: "Butwal", ne: "बुटवल", province: "lumbini" },
-] as const satisfies readonly (Bilingual & { id: string; province: ProvinceId })[]
-
-export type City = (typeof cities)[number]
-export type CityId = City["id"]
-
-export const centreTypes = {
-  clinic: { en: "Clinic", ne: "क्लिनिक" },
-  hospital: { en: "Hospital", ne: "अस्पताल" },
-  diagnostic: { en: "Diagnostic centre", ne: "डायग्नोस्टिक केन्द्र" },
-} satisfies Record<string, Bilingual>
-
-export type Centre = {
-  id: string
-  city: CityId
-  name: Bilingual
-  address: Bilingual
-  phone: string
-  type: keyof typeof centreTypes
-}
-
-export const centres: Centre[] = [
-  { id: "biratnagar-main-road", city: "biratnagar", name: { en: "BreastScan Biratnagar", ne: "BreastScan विराटनगर" }, address: { en: "Main Road, Biratnagar 56613", ne: "मेन रोड, विराटनगर ५६६१३" }, phone: "+977-9800000010", type: "diagnostic" },
-  { id: "dharan-bhanu-chowk", city: "dharan", name: { en: "BreastScan Dharan", ne: "BreastScan धरान" }, address: { en: "Bhanu Chowk, Dharan 56700", ne: "भानु चोक, धरान ५६७००" }, phone: "+977-9800000011", type: "clinic" },
-  { id: "janakpur-station-road", city: "janakpur", name: { en: "BreastScan Janakpur", ne: "BreastScan जनकपुर" }, address: { en: "Station Road, Janakpurdham 45600", ne: "स्टेसन रोड, जनकपुरधाम ४५६००" }, phone: "+977-9800000013", type: "clinic" },
-  { id: "kathmandu-baneshwor", city: "kathmandu", name: { en: "BreastScan Baneshwor", ne: "BreastScan बानेश्वर" }, address: { en: "New Baneshwor, Kathmandu 44600", ne: "नयाँ बानेश्वर, काठमाडौं ४४६००" }, phone: "+977-9800000001", type: "clinic" },
-  { id: "kathmandu-maharajgunj", city: "kathmandu", name: { en: "BreastScan Maharajgunj", ne: "BreastScan महाराजगन्ज" }, address: { en: "Maharajgunj Chowk, Kathmandu 44600", ne: "महाराजगन्ज चोक, काठमाडौं ४४६००" }, phone: "+977-9800000002", type: "hospital" },
-  { id: "kathmandu-kalanki", city: "kathmandu", name: { en: "BreastScan Kalanki", ne: "BreastScan कलंकी" }, address: { en: "Kalanki Ring Road, Kathmandu 44600", ne: "कलंकी रिङरोड, काठमाडौं ४४६००" }, phone: "+977-9800000003", type: "diagnostic" },
-  { id: "lalitpur-jawalakhel", city: "lalitpur", name: { en: "BreastScan Jawalakhel", ne: "BreastScan जावलाखेल" }, address: { en: "Jawalakhel, Lalitpur 44700", ne: "जावलाखेल, ललितपुर ४४७००" }, phone: "+977-9800000004", type: "clinic" },
-  { id: "lalitpur-kumaripati", city: "lalitpur", name: { en: "BreastScan Kumaripati", ne: "BreastScan कुमारीपाटी" }, address: { en: "Kumaripati, Lalitpur 44700", ne: "कुमारीपाटी, ललितपुर ४४७००" }, phone: "+977-9800000005", type: "diagnostic" },
-  { id: "bhaktapur-suryabinayak", city: "bhaktapur", name: { en: "BreastScan Suryabinayak", ne: "BreastScan सूर्यविनायक" }, address: { en: "Suryabinayak, Bhaktapur 44800", ne: "सूर्यविनायक, भक्तपुर ४४८००" }, phone: "+977-9800000006", type: "clinic" },
-  { id: "bharatpur-ward-10", city: "bharatpur", name: { en: "BreastScan Bharatpur", ne: "BreastScan भरतपुर" }, address: { en: "Bharatpur-10, Chitwan 44200", ne: "भरतपुर-१०, चितवन ४४२००" }, phone: "+977-9800000007", type: "hospital" },
-  { id: "pokhara-lakeside", city: "pokhara", name: { en: "BreastScan Lakeside", ne: "BreastScan लेकसाइड" }, address: { en: "Lakeside Road, Pokhara 33700", ne: "लेकसाइड रोड, पोखरा ३३७००" }, phone: "+977-9800000008", type: "clinic" },
-  { id: "pokhara-ramghat", city: "pokhara", name: { en: "BreastScan Ramghat", ne: "BreastScan रामघाट" }, address: { en: "Ramghat, Pokhara 33700", ne: "रामघाट, पोखरा ३३७००" }, phone: "+977-9800000009", type: "hospital" },
-  { id: "butwal-traffic-chowk", city: "butwal", name: { en: "BreastScan Butwal", ne: "BreastScan बुटवल" }, address: { en: "Traffic Chowk, Butwal 32907", ne: "ट्राफिक चोक, बुटवल ३२९०७" }, phone: "+977-9800000012", type: "hospital" },
-]
+// Provinces, cities and centres are not listed here: they come from the API
+// (GET /api/locations) and are managed on the admin page, /en/admin.
 
 export const locationsPage = {
   meta: {
@@ -129,4 +69,17 @@ export const finderCopy = {
   call: { en: (name: string) => `Call ${name}`, ne: (name: string) => `${name} मा फोन गर्नुहोस्` },
   book: { en: "Book here", ne: "यहाँ बुक गर्नुहोस्" },
   bookAt: { en: (name: string) => `Book at ${name}`, ne: (name: string) => `${name} मा बुक गर्नुहोस्` },
+  loading: { en: "Loading centres…", ne: "केन्द्रहरू लोड हुँदैछन्…" },
+  failed: { en: "We couldn’t load the centre list.", ne: "केन्द्रको सूची लोड गर्न सकिएन।" },
+  failedHint: {
+    en: "Check your connection and try again, or call us to book.",
+    ne: "इन्टरनेट जडान जाँचेर फेरि प्रयास गर्नुहोस्, वा बुक गर्न हामीलाई फोन गर्नुहोस्।",
+  },
+  retry: { en: "Try again", ne: "फेरि प्रयास गर्नुहोस्" },
+  empty: { en: "No centres are listed yet.", ne: "अहिलेसम्म कुनै केन्द्र सूचीमा छैन।" },
+  emptyHint: {
+    en: "New centres are opening soon. Until then, we can screen you at home.",
+    ne: "नयाँ केन्द्रहरू छिट्टै खुल्दैछन्। त्यसबेलासम्म हामी तपाईंको घरमै स्क्रिनिङ गर्न सक्छौं।",
+  },
+  bookHome: { en: "Book a home visit", ne: "घरमै जाँच बुक गर्नुहोस्" },
 }

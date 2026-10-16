@@ -28,10 +28,13 @@ export const paths = {
   /** The home page's "Know your body" section. */
   know: "/#know",
   book: "/book",
+  /** One post is /news?post=<slug>: posts come from the API, so there is no page per post in the static build. */
+  news: "/news",
 } as const
 
 export const nav: { label: Bilingual; path: string }[] = [
   { label: { en: "The test", ne: "परीक्षण" }, path: paths.screening },
   { label: { en: "Locations", ne: "केन्द्रहरू" }, path: paths.locations },
+  { label: { en: "News", ne: "समाचार" }, path: paths.news },
   { label: { en: "FAQ", ne: "प्रश्नोत्तर" }, path: paths.faq },
 ]
