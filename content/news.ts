@@ -5,7 +5,7 @@ import type { Bilingual, SectionCopy } from "./types"
 
 export const newsPage = {
   meta: {
-    title: { en: "News", ne: "समाचार" },
+    title: { en: "Breast health news", ne: "स्तन स्वास्थ्य समाचार" },
     description: {
       en: "Screening camps, new centres and breast-health updates from BreastScan Nepal.",
       ne: "BreastScan नेपालका स्क्रिनिङ शिविर, नयाँ केन्द्र र स्तन स्वास्थ्यसम्बन्धी जानकारी।",

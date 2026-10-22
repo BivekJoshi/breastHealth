@@ -5,10 +5,10 @@ import type { SectionCopy } from "./types"
 
 export const locationsPage = {
   meta: {
-    title: { en: "Screening centres", ne: "स्क्रिनिङ केन्द्रहरू" },
+    title: { en: "Breast screening centres in Nepal", ne: "नेपालका स्तन स्क्रिनिङ केन्द्रहरू" },
     description: {
-      en: "Find an AI thermal breast screening centre near you, anywhere in Nepal.",
-      ne: "नेपालभर आफ्नो नजिकको एआई थर्मल स्तन स्क्रिनिङ केन्द्र खोज्नुहोस्।",
+      en: "Find a breast cancer screening centre near you, anywhere in Nepal: addresses, phone numbers and online booking.",
+      ne: "नेपालभर आफ्नो नजिकको स्तन क्यान्सर स्क्रिनिङ केन्द्र खोज्नुहोस्: ठेगाना, फोन नम्बर र अनलाइन बुकिङ।",
     },
   },
   intro: {

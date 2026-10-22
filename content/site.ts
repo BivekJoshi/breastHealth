@@ -30,9 +30,15 @@ export const paths = {
   book: "/book",
   /** One post is /news?post=<slug>: posts come from the API, so there is no page per post in the static build. */
   news: "/news",
+  /** The breast health guide; one article is /breast-health/<slug> (content/guide.ts). */
+  guide: "/breast-health",
 } as const
 
+/** The full address of a localised path, in the trailing-slash form the static export serves. */
+export const pageUrl = (localizedPath: string) => `${site.url}${localizedPath}/`
+
 export const nav: { label: Bilingual; path: string }[] = [
+  { label: { en: "Breast health", ne: "स्तन स्वास्थ्य" }, path: paths.guide },
   { label: { en: "The test", ne: "परीक्षण" }, path: paths.screening },
   { label: { en: "Locations", ne: "केन्द्रहरू" }, path: paths.locations },
   { label: { en: "News", ne: "समाचार" }, path: paths.news },

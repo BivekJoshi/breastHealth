@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button"
 import { PageIntro } from "@/components/common/page-intro"
 import { locationsPage } from "@/content/locations"
 import { paths } from "@/content/site"
+import { CentresJsonLd } from "@/features/locations/centres-json-ld"
 import { LocationFinder } from "@/features/locations/location-finder"
 import { LocationFinderFromUrl } from "@/features/locations/location-finder-from-url"
 import { localizedMetadata } from "@/i18n/metadata"
@@ -26,6 +27,7 @@ export default async function LocationsPage() {
 
   return (
     <>
+      <CentresJsonLd />
       <PageIntro copy={locationsPage.intro} />
 
       <section className="mx-auto max-w-7xl px-5 py-14 sm:py-20">

@@ -173,10 +173,10 @@ export const preparation = {
 
 export const screeningPage = {
   meta: {
-    title: { en: "How thermal screening works", ne: "थर्मल स्क्रिनिङ कसरी काम गर्छ" },
+    title: { en: "Thermal breast cancer screening: how it works", ne: "थर्मल स्तन क्यान्सर स्क्रिनिङ कसरी काम गर्छ" },
     description: {
-      en: "How AI thermal breast screening works, how it compares with mammography, who should get screened and how to prepare.",
-      ne: "एआई थर्मल स्तन स्क्रिनिङ कसरी काम गर्छ, म्यामोग्राफीसँग कस्तो फरक छ, कसले गराउने र कसरी तयारी गर्ने।",
+      en: "How AI thermal breast cancer screening works in Nepal, how it compares with mammography, who should get screened and how to prepare.",
+      ne: "नेपालमा एआई थर्मल स्तन क्यान्सर स्क्रिनिङ कसरी काम गर्छ, म्यामोग्राफीसँग कस्तो फरक छ, कसले गराउने र कसरी तयारी गर्ने।",
     },
   },
   intro: {
