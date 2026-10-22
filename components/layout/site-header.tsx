@@ -21,7 +21,7 @@ export async function SiteHeader() {
           className="absolute inset-0 -z-10 translate-y-1.5 scale-x-[1.04] rounded-full bg-white/80 opacity-0 shadow-soft ring-1 ring-petal/70 backdrop-blur-md transition-[opacity,scale,translate] duration-700 ease-soft group-data-scrolled:translate-y-0 group-data-scrolled:scale-x-100 group-data-scrolled:opacity-100 motion-reduce:transition-none"
         />
         <Logo className="mr-auto h-11 sm:h-14" />
-        <NavLinks className="hidden items-center gap-1 lg:flex" linkClassName="px-4 py-2 text-[0.95rem] font-bold" />
+        <NavLinks className="hidden items-center gap-1 lg:flex" linkClassName="px-3 py-2 text-[0.95rem] font-bold whitespace-nowrap xl:px-4" />
         <LanguageSwitch />
         <Button asChild size="lg" className="hidden h-11 rounded-full px-5 sm:inline-flex">
           <Link href={href(paths.book)}>

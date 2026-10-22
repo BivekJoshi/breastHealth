@@ -2,10 +2,10 @@ import type { Bilingual, SectionCopy } from "./types"
 
 export const bookingPage = {
   meta: {
-    title: { en: "Book a screening", ne: "स्क्रिनिङ बुक गर्नुहोस्" },
+    title: { en: "Book a breast screening", ne: "स्तन स्क्रिनिङ बुक गर्नुहोस्" },
     description: {
-      en: "Request an AI thermal breast screening appointment at a centre near you, or at home.",
-      ne: "नजिकको केन्द्रमा वा घरमै एआई थर्मल स्तन स्क्रिनिङको अपोइन्टमेन्ट अनुरोध गर्नुहोस्।",
+      en: "Book an AI thermal breast cancer screening appointment at a centre near you, or at home, anywhere in Nepal.",
+      ne: "नेपालभर नजिकको केन्द्रमा वा घरमै एआई थर्मल स्तन क्यान्सर स्क्रिनिङको अपोइन्टमेन्ट लिनुहोस्।",
     },
   },
   intro: {

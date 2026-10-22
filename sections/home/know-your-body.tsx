@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button"
 import { Floaters, WaveEdge } from "@/components/brand/doodles"
 import { SectionIntro } from "@/components/common/section-intro"
 import { awarenessCopy, riskFactors, seeADoctor, warningSigns } from "@/content/awareness"
+import { articlePath, articles, guideCopy } from "@/content/guide"
 import type { Bilingual } from "@/content/types"
 import { paths } from "@/content/site"
 import { getI18n } from "@/i18n/server"
@@ -58,6 +59,20 @@ export async function KnowYourBody() {
                 ))}
               </ul>
             </div>
+          </div>
+
+          {/* into the breast health guide */}
+          <div className="mt-12 flex flex-wrap items-center gap-2.5">
+            <span className="mr-1 font-display text-lg font-semibold text-navy">{t(guideCopy.learnMore)}</span>
+            {articles.map((a) => (
+              <Link
+                key={a.slug}
+                href={href(articlePath(a.slug))}
+                className="rounded-full bg-white px-4 py-2 font-bold text-berry shadow-sm transition-colors hover:bg-rose hover:text-white"
+              >
+                {t(a.short)}
+              </Link>
+            ))}
           </div>
 
           <div className="on-rose relative isolate mt-14 flex flex-col gap-6 overflow-hidden rounded-[2.25rem] bg-linear-to-r from-rose to-[#e0508a] p-8 text-white shadow-lift sm:p-10 lg:flex-row lg:items-center lg:justify-between">
