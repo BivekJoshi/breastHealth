@@ -8,6 +8,12 @@ ErrorDocument 404 /404.html
 <IfModule mod_rewrite.c>
   RewriteEngine On
 
+  # One address per page for Google: http:// and www. move permanently (301)
+  # to https://breastscan.health, the site.url every canonical link uses.
+  RewriteCond %{HTTPS} off [OR]
+  RewriteCond %{HTTP_HOST} ^www\. [NC]
+  RewriteRule ^ https://breastscan.health%{REQUEST_URI} [R=301,L]
+
   # Same scope as proxy.ts: any path outside /en, /ne and /_next with no file
   # extension. $1 is the path, so /book becomes /<locale>/book; the query
   # string (?city=, ?centre=) is kept.

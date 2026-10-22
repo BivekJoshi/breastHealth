@@ -3,7 +3,7 @@ import type { Bilingual, SectionCopy } from "./types"
 /** The home page's search snippet. The title already names the brand, so it skips the layout's title template. */
 export const homeMeta = {
   title: {
-    en: "BreastScan Nepal | Breast health and screening information",
+    en: "Breast Scan Nepal | Breast health and screening information",
     ne: "BreastScan Nepal | स्तन स्वास्थ्य तथा स्क्रिनिङ सम्बन्धी जानकारी",
   },
   description: {
@@ -26,7 +26,7 @@ const heroTitle: Bilingual<{ first: string; soft: string; accent: string; after?
 }
 
 export const hero = {
-  badge: { en: "AI thermal breast screening · Nepal", ne: "एआई थर्मल स्तन स्क्रिनिङ · नेपाल" },
+  badge: { en: "AI thermal breast scan · Nepal", ne: "एआई थर्मल स्तन स्क्रिनिङ · नेपाल" },
   title: heroTitle,
   lead: {
     en: "Learn about your breast health, understand the screening options available, and talk to a health worker when you need to.",

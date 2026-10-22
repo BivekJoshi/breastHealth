@@ -18,7 +18,7 @@ export default async function SiteLayout({ children }: LayoutProps<"/[lang]">) {
               "@type": "MedicalOrganization",
               "@id": `${site.url}/#organization`,
               name: site.name,
-              alternateName: [site.nameNe, "BreastScan Nepal", "BreastScan.health"],
+              alternateName: [site.nameNe, "Breast Scan Nepal", "BreastScan Nepal", "BreastScan.health"],
               url: site.url,
               logo: `${site.url}/apple-icon.png`,
               description: t(site.description),
