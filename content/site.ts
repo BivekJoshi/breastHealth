@@ -10,7 +10,7 @@ export const site = {
     ne: "BreastScan — नेपालमा एआई थर्मल स्तन स्क्रिनिङ",
   },
   description: {
-    en: "Radiation-free, no-touch AI thermal breast screening for women aged 18 to 80+, at centres across Nepal.",
+    en: "Radiation-free, no-touch AI thermal breast scan for women aged 18 to 80+, at centres across Nepal.",
     ne: "१८ देखि ८०+ वर्षका महिलाका लागि विकिरण र स्पर्शरहित एआई थर्मल स्तन स्क्रिनिङ, नेपालभरका केन्द्रहरूमा।",
   },
   phone: "+977-9800000000",
