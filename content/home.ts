@@ -1,17 +1,36 @@
 import type { Bilingual, SectionCopy } from "./types"
 
+/** The home page's search snippet. The title already names the brand, so it skips the layout's title template. */
+export const homeMeta = {
+  title: {
+    en: "BreastScan Nepal | Breast health and screening information",
+    ne: "BreastScan Nepal | स्तन स्वास्थ्य तथा स्क्रिनिङ सम्बन्धी जानकारी",
+  },
+  description: {
+    en: "Breast health, possible signs of breast cancer, screening methods and Niramai Thermalytix technology, explained for women in Nepal.",
+    ne: "नेपालमा स्तन स्वास्थ्य, स्तन क्यान्सरका सम्भावित लक्षण, स्क्रिनिङ विधि र Niramai Thermalytix प्रविधिबारे नेपाली भाषामा जानकारी।",
+  },
+  keywords: [
+    "स्तन क्यान्सर परीक्षण नेपाल",
+    "स्तन स्वास्थ्य परीक्षण",
+    "स्तनमा गाँठो आएमा के गर्ने",
+    "Breast Cancer Screening Nepal",
+    "Niramai Thermalytix Nepal",
+  ],
+} satisfies { title: Bilingual; description: Bilingual; keywords: string[] }
+
 // A strong first line, a soft word, then the accent.
 const heroTitle: Bilingual<{ first: string; soft: string; accent: string; after?: string }> = {
-  en: { first: "Early detection", soft: "brings ", accent: "peace of mind." },
-  ne: { first: "प्रारम्भिक पहिचानले", soft: "", accent: "मनको शान्ति", after: " दिन्छ।" },
+  en: { first: "Be breast aware.", soft: "Get checked ", accent: "in time." },
+  ne: { first: "स्तन स्वास्थ्यप्रति सचेत बनौँ,", soft: "", accent: "समयमै", after: " जाँच गरौँ।" },
 }
 
 export const hero = {
   badge: { en: "AI thermal breast screening · Nepal", ne: "एआई थर्मल स्तन स्क्रिनिङ · नेपाल" },
   title: heroTitle,
   lead: {
-    en: "BreastScan uses AI-powered thermal imaging to look for early changes in your breasts — no radiation, no touch, no pain. A safer, gentler way to take care of yourself.",
-    ne: "BreastScan ले एआईमा आधारित थर्मल इमेजिङ प्रयोग गरेर स्तनमा हुने प्रारम्भिक परिवर्तन खोज्छ — न विकिरण, न स्पर्श, न दुखाइ। आफ्नो ख्याल राख्ने सुरक्षित र सहज तरिका।",
+    en: "Learn about your breast health, understand the screening options available, and talk to a health worker when you need to.",
+    ne: "आफ्नो स्तन स्वास्थ्यबारे जान्नुहोस्। उपलब्ध स्क्रिनिङ विकल्प बुझ्नुहोस् र आवश्यक पर्दा स्वास्थ्यकर्मीसँग परामर्श लिनुहोस्।",
   },
   findCentre: { en: "Find a centre", ne: "केन्द्र खोज्नुहोस्" },
   features: [
@@ -34,6 +53,45 @@ export const hero = {
   },
   note: { en: "Your health matters", ne: "तपाईंको स्वास्थ्य महत्त्वपूर्ण छ" },
 }
+
+export const thermalytixCopy: SectionCopy & { keepInMind: Bilingual; more: Bilingual } = {
+  title: {
+    en: { before: "What is Niramai ", accent: "Thermalytix", after: "?" },
+    ne: { before: "Niramai ", accent: "Thermalytix", after: " के हो?" },
+  },
+  lead: {
+    en: "Niramai Thermalytix is a technology based on artificial intelligence (AI) and thermal imaging. The test is contact-free and uses no ionising radiation.",
+    ne: "Niramai Thermalytix कृत्रिम बुद्धिमत्ता (AI) र थर्मल इमेजिङमा आधारित प्रविधि हो। यसको परीक्षण प्रक्रिया सम्पर्करहित र आयनीकरण विकिरणरहित हुन्छ।",
+  },
+  keepInMind: { en: "Keep in mind", ne: "ध्यान दिनुपर्ने कुरा" },
+  more: { en: "More about the test", ne: "परीक्षणबारे थप जान्नुहोस्" },
+}
+
+export const thermalytixFacts: { id: "ai" | "contact" | "radiation"; label: Bilingual }[] = [
+  { id: "ai", label: { en: "AI + thermal imaging", ne: "एआई र थर्मल इमेजिङ" } },
+  { id: "contact", label: { en: "Contact-free", ne: "सम्पर्करहित" } },
+  { id: "radiation", label: { en: "No ionising radiation", ne: "आयनीकरण विकिरणरहित" } },
+]
+
+/** What the result can and cannot tell you. */
+export const thermalytixLimits: Bilingual[] = [
+  {
+    ne: "यसको नतिजाले मात्र स्तन क्यान्सर भएको वा नभएको निश्चित गर्दैन।",
+    en: "Its result alone cannot confirm whether you do or don’t have breast cancer.",
+  },
+  {
+    ne: "यो चिकित्सकले आवश्यक ठहर्‍याएका अन्य परीक्षणको विकल्प होइन।",
+    en: "It does not replace other tests your doctor says you need.",
+  },
+  {
+    ne: "स्तनमा नयाँ गाँठो, दुखाइ, वा अन्य असामान्य परिवर्तन देखिएमा तुरुन्त स्वास्थ्यकर्मीसँग परामर्श लिनुहोस्।",
+    en: "If you notice a new lump, pain or any other unusual change in your breast, see a health worker right away.",
+  },
+  {
+    ne: "स्क्रिनिङका लागि बुकिङ गर्दा सँगै, डाक्टरको परामर्श लिनु राम्रो हुन्छ।",
+    en: "When you book a screening, it’s a good idea to see a doctor as well.",
+  },
+]
 
 export const promisesCopy: SectionCopy = {
   title: {
@@ -79,6 +137,10 @@ export const centresCopy: SectionCopy & {
   cityLabel: Bilingual<(city: string, count: string) => string>
 } = {
   title: { en: "Find a centre near you.", ne: "नजिकको केन्द्र खोज्नुहोस्।" },
+  lead: {
+    en: "Looking for breast health information or a screening centre? BreastScan.health brings together screening centres across Nepal, breast health information and the Thermalytix screening service. Choose the centre nearest you and get in touch for an appointment. This screening is not a substitute for a medical diagnosis — talk to a qualified health worker about your results.",
+    ne: "स्तन स्वास्थ्यबारे जानकारी र स्क्रिनिङ केन्द्र खोज्दै हुनुहुन्छ? BreastScan.health मा नेपालका स्क्रिनिङ केन्द्र, स्तन स्वास्थ्यसम्बन्धी जानकारी र Thermalytix स्क्रिनिङ सेवाबारे जान्नुहोस्। नजिकको केन्द्र छान्नुहोस् र अपोइन्टमेन्टका लागि सम्पर्क गर्नुहोस्। यो स्क्रिनिङ चिकित्सकीय निदानको विकल्प होइन। नतिजाबारे योग्य स्वास्थ्यकर्मीसँग परामर्श लिनुहोस्।",
+  },
   summary: {
     en: (c, ci, p) =>
       `${c} ${c === "1" ? "centre" : "centres"} in ${ci} ${ci === "1" ? "city" : "cities"} across ${p} ${p === "1" ? "province" : "provinces"}. Pick your city to see addresses and call directly.`,

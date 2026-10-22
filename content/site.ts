@@ -1,10 +1,10 @@
 import type { Bilingual } from "./types"
 
-// SAMPLE contact details and domain — replace before going live.
+// SAMPLE contact details — replace before going live.
 export const site = {
   name: "BreastScan",
   nameNe: "स्तन जाँच केन्द्र",
-  url: "https://breastscan.com.np",
+  url: "https://breastscan.health",
   title: {
     en: "BreastScan — AI thermal breast screening in Nepal",
     ne: "BreastScan — नेपालमा एआई थर्मल स्तन स्क्रिनिङ",
